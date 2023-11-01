@@ -29,20 +29,22 @@ public class TarefaController {
 	private UsuarioService usuarioService;
 	
 	@PostMapping
-	public ResponseEntity<CadastrarTarefaDto> salvar ( @RequestBody CadastrarTarefaDto cadastrarTarefaDto) {
+	public ResponseEntity salvar ( @RequestBody CadastrarTarefaDto cadastrarTarefaDto) {
 		
 		Tarefa tarefa = this.converterDtoparaTarefa(cadastrarTarefaDto);
 		
 		this.tarefaService.salvarTarefa(tarefa);
 		
-		return new ResponseEntity<CadastrarTarefaDto>(HttpStatus.CREATED);
+		return new ResponseEntity(HttpStatus.CREATED);
 		
 	}
 	
 	@GetMapping(value = "/{matricula}")
 	public ResponseEntity<List<Tarefa>> listaTarefasPorMatricula (@PathVariable Long matricula) {
 		
-		List<Tarefa> tarefa = this.tarefaService.listarTarefasPorUsuarioMatricula(matricula);
+		Long id = usuario(matricula).getId();
+		
+		List<Tarefa> tarefa = this.tarefaService.listarTarefasPorUsuarioId(id);
 				
 		return new ResponseEntity<List<Tarefa>>(tarefa, HttpStatus.OK) ;
 		
@@ -51,11 +53,18 @@ public class TarefaController {
 
 	private Tarefa converterDtoparaTarefa(CadastrarTarefaDto cadastrarTarefaDto) {
 
-		Tarefa tarefa = new Tarefa();	
+		Tarefa tarefa = new Tarefa();
+		
 		tarefa.setDescricao(cadastrarTarefaDto.getDescricao());	
-
+		tarefa.setUsuario(usuario(cadastrarTarefaDto.getMatricula()));
 		return tarefa;
 	}
 	
-	
+	private Usuario usuario (Long matricula) {
+		Usuario usuario = new Usuario();
+		
+		this.usuarioService.buscarPorMatricula(matricula).ifPresent(usu -> usuario.setId(usu.getId()));
+		
+		return usuario;
+	}
 }

@@ -25,13 +25,13 @@ public class UsuarioController {
 	private UsuarioService usuarioService;
 	
 	@PostMapping
-	public ResponseEntity<?> salvar (@RequestBody CadastroUsuarioDto cadastroUsuarioDto) {
+	public ResponseEntity salvar (@RequestBody CadastroUsuarioDto cadastroUsuarioDto) {
 		
 		Usuario usuario = this.converterDtoparaUsuario(cadastroUsuarioDto);
 		
 		this.usuarioService.salvarUsuario(usuario);
 		
-		return ResponseEntity.ok().body(null);
+		return new ResponseEntity(HttpStatus.CREATED);
 		
 	}
 	
