@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kap.controleusuario.dtos.CadastroUsuarioDto;
 import com.kap.controleusuario.entities.Usuario;
+import com.kap.controleusuario.exception.NotFoundException;
 import com.kap.controleusuario.services.UsuarioService;
 import com.kap.controleusuario.utils.UserRoles;
+import com.kap.controleusuario.utils.Validacao;
 
 @RestController
 @RequestMapping("/api/usuario")
@@ -25,10 +27,10 @@ public class UsuarioController {
 	private UsuarioService usuarioService;
 	
 	@PostMapping
-	public ResponseEntity salvar (@RequestBody CadastroUsuarioDto cadastroUsuarioDto) {
+	public ResponseEntity salvarUsuario (@RequestBody CadastroUsuarioDto cadastroUsuarioDto) {
 		
 		Usuario usuario = this.converterDtoparaUsuario(cadastroUsuarioDto);
-		
+				
 		this.usuarioService.salvarUsuario(usuario);
 		
 		return new ResponseEntity(HttpStatus.CREATED);
@@ -36,13 +38,14 @@ public class UsuarioController {
 	}
 	
 	@GetMapping("/{matricula}")
-	public ResponseEntity<Optional<Usuario>> listarUsuarioPorMatricula(@PathVariable Long matricula){
+	public ResponseEntity<Optional<Usuario>> listarUsuarioPorMatricula(@PathVariable Long matricula) throws NotFoundException {
 		Optional<Usuario> usuario = this.usuarioService.buscarPorMatricula(matricula);
 		
 		return new ResponseEntity<Optional<Usuario>>(usuario, HttpStatus.ACCEPTED);
 	}
 
 	private Usuario converterDtoparaUsuario(CadastroUsuarioDto cadastroUsuarioDto) {
+				
 		Usuario usuario = new Usuario();
 		usuario.setNome(cadastroUsuarioDto.getNome());
 		usuario.setEmail(cadastroUsuarioDto.getEmail());

@@ -33,8 +33,4 @@ public class CadastrarTarefaDto {
 		this.matricula = matricula;
 	}
 	
-	
-	
-	
-
 }

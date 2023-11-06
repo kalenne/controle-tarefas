@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kap.controleusuario.dtos.CadastrarTarefaDto;
 import com.kap.controleusuario.entities.Tarefa;
 import com.kap.controleusuario.entities.Usuario;
+import com.kap.controleusuario.exception.NotFoundException;
 import com.kap.controleusuario.services.TarefaService;
 import com.kap.controleusuario.services.UsuarioService;
 
@@ -29,7 +30,7 @@ public class TarefaController {
 	private UsuarioService usuarioService;
 	
 	@PostMapping
-	public ResponseEntity salvar ( @RequestBody CadastrarTarefaDto cadastrarTarefaDto) {
+	public ResponseEntity salvarTarefa ( @RequestBody CadastrarTarefaDto cadastrarTarefaDto) {
 		
 		Tarefa tarefa = this.converterDtoparaTarefa(cadastrarTarefaDto);
 		
@@ -40,14 +41,13 @@ public class TarefaController {
 	}
 	
 	@GetMapping(value = "/{matricula}")
-	public ResponseEntity<List<Tarefa>> listaTarefasPorMatricula (@PathVariable Long matricula) {
-		
+	public ResponseEntity<List<Tarefa>> listaTarefasPorMatricula (@PathVariable Long matricula) throws NotFoundException {
 		Long id = usuario(matricula).getId();
 		
 		List<Tarefa> tarefa = this.tarefaService.listarTarefasPorUsuarioId(id);
 				
 		return new ResponseEntity<List<Tarefa>>(tarefa, HttpStatus.OK) ;
-		
+				
 	}
 
 
@@ -62,9 +62,7 @@ public class TarefaController {
 	
 	private Usuario usuario (Long matricula) {
 		Usuario usuario = new Usuario();
-		
 		this.usuarioService.buscarPorMatricula(matricula).ifPresent(usu -> usuario.setId(usu.getId()));
-		
 		return usuario;
 	}
 }

@@ -1,35 +1,36 @@
 package com.kap.controleusuario.services.impl;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kap.controleusuario.entities.Tarefa;
-import com.kap.controleusuario.entities.Usuario;
+import com.kap.controleusuario.exception.NotFoundException;
 import com.kap.controleusuario.repositories.TarefaRepository;
-import com.kap.controleusuario.repositories.UsuarioRepository;
 import com.kap.controleusuario.services.TarefaService;
-import com.kap.controleusuario.services.UsuarioService;
+import com.kap.controleusuario.utils.Validacao;
 
 @Service
 public class TarefaServiceImpl implements TarefaService {
+	
+	private static final Logger log = LoggerFactory.getLogger(TarefaServiceImpl.class);
 	
 	@Autowired
 	private TarefaRepository tarefaRepository;
 	
 	@Autowired
-	private UsuarioRepository usuarioRepository;
+	private Validacao validacao;
 	
 	@Override
-	public List<Tarefa> listarTarefasPorUsuarioId(Long id) {
+	public List<Tarefa> listarTarefasPorUsuarioId(Long id) throws NotFoundException {
 		
 		List<Tarefa> tarefa = this.tarefaRepository.findByUsuarioId(id);
 		
 		if (tarefa.isEmpty()) {
-			return Collections.EMPTY_LIST;
+			throw new NotFoundException("Não possui tarefa atrelada ao Usuario");
 		}
 		
 		return tarefa;
@@ -41,16 +42,20 @@ public class TarefaServiceImpl implements TarefaService {
 	}
 
 	@Override
-	public List<Tarefa> listarTarefasPorUsuarioMatricula(Long matricula) {
+	public List<Tarefa> listarTarefasPorUsuarioMatricula(Long matricula) throws NotFoundException {
 		
-		Usuario usuario = this.usuarioRepository.findByMatricula(matricula);
+		Long usuario_id = this.validacao.usuarioPorMatricula(matricula);
 		
-		System.out.println(usuario);
+		log.debug(usuario_id.toString());
 		
-		List<Tarefa> tarefa = this.tarefaRepository.findByUsuarioId(usuario.getId());
+		if(usuario_id.toString().isEmpty()) {
+			throw new NotFoundException("Usuario inexistente");
+		}
+		
+		List<Tarefa> tarefa = this.tarefaRepository.findByUsuarioId(usuario_id);
 		
 		if (tarefa.isEmpty()) {
-			return Collections.EMPTY_LIST;
+			throw new NotFoundException("Não possui tarefa atrelada ao Usuario");
 		}
 		
 		return tarefa;
