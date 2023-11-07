@@ -1,7 +1,6 @@
 package com.kap.controleusuario.services.impl;
 
 import java.util.Optional;
-import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,7 +48,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 	public Usuario salvarUsuario(Usuario usuario) {		
 		usuario.setMatricula(validacao.gerarMatriculaUsuarioValidacao());
 		usuario.setEmail(validacao.usuarioValidaEmail(usuario.getEmail()));
-		
+				
 		return this.usuarioRepository.save(usuario);
 	}
 	

@@ -17,7 +17,6 @@ import com.kap.controleusuario.entities.Usuario;
 import com.kap.controleusuario.exception.NotFoundException;
 import com.kap.controleusuario.services.UsuarioService;
 import com.kap.controleusuario.utils.UserRoles;
-import com.kap.controleusuario.utils.Validacao;
 
 @RestController
 @RequestMapping("/api/usuario")
@@ -38,10 +37,12 @@ public class UsuarioController {
 	}
 	
 	@GetMapping("/{matricula}")
-	public ResponseEntity<Optional<Usuario>> listarUsuarioPorMatricula(@PathVariable Long matricula) throws NotFoundException {
+	public ResponseEntity<CadastroUsuarioDto> listarUsuarioPorMatricula(@PathVariable Long matricula) throws NotFoundException {
 		Optional<Usuario> usuario = this.usuarioService.buscarPorMatricula(matricula);
 		
-		return new ResponseEntity<Optional<Usuario>>(usuario, HttpStatus.ACCEPTED);
+		CadastroUsuarioDto dto = converterUsuarioParaDto(usuario.get());
+		
+		return new ResponseEntity<CadastroUsuarioDto>(dto, HttpStatus.ACCEPTED);
 	}
 
 	private Usuario converterDtoparaUsuario(CadastroUsuarioDto cadastroUsuarioDto) {
@@ -52,6 +53,15 @@ public class UsuarioController {
 		usuario.setSenha(cadastroUsuarioDto.getSenha());
 		usuario.setRoles(UserRoles.ROLE_USER);
 		return usuario;
+	}
+	
+	private CadastroUsuarioDto converterUsuarioParaDto (Usuario usuario) {
+		
+		CadastroUsuarioDto dto = new CadastroUsuarioDto();
+		dto.setEmail(usuario.getEmail());
+		dto.setNome(usuario.getNome());
+		
+		return dto;
 	}
 
 }

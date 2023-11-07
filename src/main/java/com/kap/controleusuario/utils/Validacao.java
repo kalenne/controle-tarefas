@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.kap.controleusuario.entities.Usuario;
 import com.kap.controleusuario.exception.AlreadyExistsException;
+import com.kap.controleusuario.exception.NotFoundException;
 import com.kap.controleusuario.repositories.UsuarioRepository;
 
 @Component
@@ -18,12 +19,7 @@ public class Validacao {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
-	
-	public Usuario usuarioValidaMatriculaEmail(Usuario usuario) {
 		
-		return usuario;
-	}
-	
 	public long gerarMatriculaUsuarioValidacao() {
 		Random valor = new Random();
 		long matricula = (long) valor.nextInt(900_000) + 100_000;
@@ -48,11 +44,15 @@ public class Validacao {
 		return email;
 	}
 	
-	public Long usuarioPorMatricula(Long matricula) {
+	public Usuario usuarioPorMatricula(Long matricula) throws NotFoundException {
 		
 		Usuario usuario = this.usuarioRepository.findByMatricula(matricula);
 		
-		return usuario.getId();
+		if(usuario == null) {
+			throw new NotFoundException("Usuario inexistente");
+		}
+		
+		return usuario;
 	}
 	
 	

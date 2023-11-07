@@ -6,8 +6,6 @@ import com.kap.controleusuario.entities.Tarefa;
 import com.kap.controleusuario.exception.NotFoundException;
 
 public interface TarefaService {
-
-	List<Tarefa> listarTarefasPorUsuarioId(Long id) throws NotFoundException;
 	
 	List<Tarefa> listarTarefasPorUsuarioMatricula(Long matricula) throws NotFoundException;
 	

@@ -14,10 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kap.controleusuario.dtos.CadastrarTarefaDto;
 import com.kap.controleusuario.entities.Tarefa;
-import com.kap.controleusuario.entities.Usuario;
 import com.kap.controleusuario.exception.NotFoundException;
 import com.kap.controleusuario.services.TarefaService;
-import com.kap.controleusuario.services.UsuarioService;
+import com.kap.controleusuario.utils.Validacao;
 
 @RestController
 @RequestMapping("/api/tarefa")
@@ -27,7 +26,7 @@ public class TarefaController {
 	private TarefaService tarefaService;
 	
 	@Autowired
-	private UsuarioService usuarioService;
+	private Validacao validacao;
 	
 	@PostMapping
 	public ResponseEntity salvarTarefa ( @RequestBody CadastrarTarefaDto cadastrarTarefaDto) {
@@ -42,27 +41,19 @@ public class TarefaController {
 	
 	@GetMapping(value = "/{matricula}")
 	public ResponseEntity<List<Tarefa>> listaTarefasPorMatricula (@PathVariable Long matricula) throws NotFoundException {
-		Long id = usuario(matricula).getId();
 		
-		List<Tarefa> tarefa = this.tarefaService.listarTarefasPorUsuarioId(id);
+		List<Tarefa> tarefa = this.tarefaService.listarTarefasPorUsuarioMatricula(matricula);
 				
 		return new ResponseEntity<List<Tarefa>>(tarefa, HttpStatus.OK) ;
 				
 	}
 
-
 	private Tarefa converterDtoparaTarefa(CadastrarTarefaDto cadastrarTarefaDto) {
 
 		Tarefa tarefa = new Tarefa();
-		
 		tarefa.setDescricao(cadastrarTarefaDto.getDescricao());	
-		tarefa.setUsuario(usuario(cadastrarTarefaDto.getMatricula()));
+		tarefa.setUsuario(this.validacao.usuarioPorMatricula(cadastrarTarefaDto.getMatricula()));
 		return tarefa;
 	}
-	
-	private Usuario usuario (Long matricula) {
-		Usuario usuario = new Usuario();
-		this.usuarioService.buscarPorMatricula(matricula).ifPresent(usu -> usuario.setId(usu.getId()));
-		return usuario;
-	}
+		
 }

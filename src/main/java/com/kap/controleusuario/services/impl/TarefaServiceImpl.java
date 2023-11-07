@@ -24,18 +24,6 @@ public class TarefaServiceImpl implements TarefaService {
 	@Autowired
 	private Validacao validacao;
 	
-	@Override
-	public List<Tarefa> listarTarefasPorUsuarioId(Long id) throws NotFoundException {
-		
-		List<Tarefa> tarefa = this.tarefaRepository.findByUsuarioId(id);
-		
-		if (tarefa.isEmpty()) {
-			throw new NotFoundException("Não possui tarefa atrelada ao Usuario");
-		}
-		
-		return tarefa;
-	}
-	
 	public Tarefa salvarTarefa(Tarefa tarefa) {
 		
 		return this.tarefaRepository.save(tarefa);
@@ -44,17 +32,11 @@ public class TarefaServiceImpl implements TarefaService {
 	@Override
 	public List<Tarefa> listarTarefasPorUsuarioMatricula(Long matricula) throws NotFoundException {
 		
-		Long usuario_id = this.validacao.usuarioPorMatricula(matricula);
-		
-		log.debug(usuario_id.toString());
-		
-		if(usuario_id.toString().isEmpty()) {
-			throw new NotFoundException("Usuario inexistente");
-		}
-		
+		Long usuario_id = this.validacao.usuarioPorMatricula(matricula).getId();
+				
 		List<Tarefa> tarefa = this.tarefaRepository.findByUsuarioId(usuario_id);
 		
-		if (tarefa.isEmpty()) {
+		if (tarefa == null) {
 			throw new NotFoundException("Não possui tarefa atrelada ao Usuario");
 		}
 		
