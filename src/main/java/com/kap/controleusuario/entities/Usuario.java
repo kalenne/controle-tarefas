@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.Email;
 
+import com.kap.controleusuario.utils.TipoStatus.UsuarioStatus;
 import com.kap.controleusuario.utils.UserRoles;
 
 @Entity (name="usuario")
@@ -29,6 +30,8 @@ public class Usuario implements Serializable {
 	private UserRoles roles;
 	
 	private String nome;
+	
+	private UsuarioStatus status;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -84,6 +87,17 @@ public class Usuario implements Serializable {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
+	@Enumerated(EnumType.STRING)
+	@Column(name="status", nullable = false)
+	public UsuarioStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(UsuarioStatus status) {
+		this.status = status;
+	}
+	
+	
 	
 	
 	

@@ -12,26 +12,29 @@ import com.kap.controleusuario.utils.FormatLocalDateTime;
 
 @ControllerAdvice
 public class HandlerException {
-	
+
 	@ExceptionHandler(NotFoundException.class)
 	public final ResponseEntity<ResponseException> handlerNotFound(NotFoundException nfe, WebRequest request) {
-		
+
 		FormatLocalDateTime fldt = new FormatLocalDateTime(LocalDateTime.now());
-		
-		ResponseException re = new ResponseException(fldt.formatDateTime(), nfe.getMessage(), request.getDescription(false));
-		
+
+		ResponseException re = new ResponseException(fldt.formatDateTime(), nfe.getMessage(),
+				request.getDescription(false));
+
 		return new ResponseEntity<ResponseException>(re, HttpStatus.NOT_FOUND);
-		
+
 	}
-	
+
 	@ExceptionHandler(AlreadyExistsException.class)
-	public final ResponseEntity<ResponseException> handlerAlreadyExists(AlreadyExistsException aee, WebRequest request){
+	public final ResponseEntity<ResponseException> handlerAlreadyExists(AlreadyExistsException aee,
+			WebRequest request) {
 		FormatLocalDateTime fldt = new FormatLocalDateTime(LocalDateTime.now());
-		
-		ResponseException re = new ResponseException(fldt.formatDateTime(), aee.getMessage(), request.getDescription(false));
-		
+
+		ResponseException re = new ResponseException(fldt.formatDateTime(), aee.getMessage(),
+				request.getDescription(false));
+
 		return new ResponseEntity<ResponseException>(re, HttpStatus.CONFLICT);
-		
+
 	}
 
 }

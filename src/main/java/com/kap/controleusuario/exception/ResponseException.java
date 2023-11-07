@@ -1,12 +1,11 @@
 package com.kap.controleusuario.exception;
 
-
 public class ResponseException {
-	
+
 	private String horario;
 	private String texto;
 	private String detalhes;
-	
+
 	public ResponseException(String horario, String texto, String detalhes) {
 		this.horario = horario;
 		this.texto = texto;
@@ -24,7 +23,5 @@ public class ResponseException {
 	public String getDetalhes() {
 		return detalhes;
 	}
-	
-	
 
 }

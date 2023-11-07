@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,8 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 
-@Entity (name="tarefa")
+import com.kap.controleusuario.utils.TipoStatus;
 
+@Entity (name="tarefa")
 public class Tarefa {
 	
 	private Long id;
@@ -21,7 +24,11 @@ public class Tarefa {
 	
 	private String descricao;
 	
+	private String codigo;
+	
 	private Date dataCriacao;
+	
+	private TipoStatus status;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,7 +72,23 @@ public class Tarefa {
         final Date atual = new Date();
         dataCriacao = atual;
     }
-	
-	
+	@Enumerated(EnumType.STRING)
+	@Column(name="status", nullable = false)
+	public TipoStatus getStatus() {
+		return status;
+	}
 
+	public void setStatus(TipoStatus status) {
+		this.status = status;
+	}
+	
+	@Column(name="codigo", nullable=false)
+	public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+	
 }
