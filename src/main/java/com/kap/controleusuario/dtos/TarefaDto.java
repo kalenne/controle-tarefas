@@ -4,7 +4,7 @@ import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.validator.constraints.Length;
 
-import com.kap.controleusuario.utils.TipoStatus;
+import com.kap.controleusuario.enums.TipoStatus;
 
 public class TarefaDto {
 

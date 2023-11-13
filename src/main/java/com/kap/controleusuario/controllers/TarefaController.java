@@ -18,7 +18,7 @@ import com.kap.controleusuario.dtos.TarefaDto;
 import com.kap.controleusuario.entities.Tarefa;
 import com.kap.controleusuario.exception.NotFoundException;
 import com.kap.controleusuario.services.TarefaService;
-import com.kap.controleusuario.utils.Validacao;
+import com.kap.controleusuario.validacao.ValidacaoUsuario;
 
 @RestController
 @RequestMapping("/api/tarefa")
@@ -28,7 +28,7 @@ public class TarefaController {
 	private TarefaService tarefaService;
 
 	@Autowired
-	private Validacao validacao;
+	private ValidacaoUsuario validacao;
 
 	@PostMapping
 	public ResponseEntity salvarTarefa(@RequestBody TarefaDto cadastrarTarefaDto) {
@@ -67,7 +67,7 @@ public class TarefaController {
 		Tarefa tarefa = this.converterDtoparaTarefa(cadastrarTarefaDto);
 		this.tarefaService.editarTarefaPorCodigo(codigo, tarefa);
 
-		return new ResponseEntity(HttpStatus.CREATED);
+		return new ResponseEntity(HttpStatus.OK);
 	}
 
 	private Tarefa converterDtoparaTarefa(TarefaDto cadastrarTarefaDto) {

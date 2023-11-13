@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import com.kap.controleusuario.entities.Tarefa;
+import com.kap.controleusuario.enums.TipoStatus;
 import com.kap.controleusuario.exception.NotFoundException;
-import com.kap.controleusuario.utils.TipoStatus;
 
 public interface TarefaService {
 	

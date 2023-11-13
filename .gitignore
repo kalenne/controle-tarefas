@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+flyway.user.toml
+report.html
+report.json

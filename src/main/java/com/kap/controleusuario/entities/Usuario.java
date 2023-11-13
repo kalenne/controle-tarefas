@@ -1,6 +1,8 @@
 package com.kap.controleusuario.entities;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,10 +11,11 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.Email;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 
-import com.kap.controleusuario.utils.TipoStatus.UsuarioStatus;
-import com.kap.controleusuario.utils.UserRoles;
+import com.kap.controleusuario.enums.TipoStatus.UsuarioStatus;
+import com.kap.controleusuario.enums.UserRoles;
 
 @Entity (name="usuario")
 public class Usuario implements Serializable {
@@ -31,7 +34,15 @@ public class Usuario implements Serializable {
 	
 	private String nome;
 	
+	private String cpf;
+	
+	private LocalDate dataNascimento;
+	
 	private UsuarioStatus status;
+	
+	private Date dataCriacao;
+	
+	private Date dataAtualizacao;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -97,7 +108,53 @@ public class Usuario implements Serializable {
 		this.status = status;
 	}
 	
+	@Column(name="data_criacao", nullable = false)
+	public Date getDataCriacao() {
+		return dataCriacao;
+	}
+
+	public void setDataCriacao(Date dataCriacao) {
+		this.dataCriacao = dataCriacao;
+	}
 	
+	
+	@Column(name="cpf", nullable = false)
+	public String getCpf() {
+		return cpf;
+	}
+
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
+	}
+	@Column(name="data_nascimento", nullable = false)
+	public LocalDate getDataNascimento() {
+		return dataNascimento;
+	}
+
+	public void setDataNascimento(LocalDate dataNascimento) {
+		this.dataNascimento = dataNascimento;
+	}
+
+	@Column(name="data_atualizacao", nullable = false)
+	public Date getDataAtualizacao() {
+		return dataAtualizacao;
+	}
+
+	public void setDataAtualizacao(Date dataAtualizacao) {
+		this.dataAtualizacao = dataAtualizacao;
+	}
+	
+	@PrePersist
+    public void prePersist() {
+        final Date atual = new Date();
+        dataCriacao = atual;
+        dataAtualizacao = atual;
+    }
+	
+	@PreUpdate
+    public void preUpdate() {
+        dataAtualizacao = new Date();
+    }
 	
 	
 	

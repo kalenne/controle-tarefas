@@ -10,11 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kap.controleusuario.entities.Tarefa;
+import com.kap.controleusuario.enums.TipoStatus;
 import com.kap.controleusuario.exception.NotFoundException;
 import com.kap.controleusuario.repositories.TarefaRepository;
 import com.kap.controleusuario.services.TarefaService;
-import com.kap.controleusuario.utils.TipoStatus;
-import com.kap.controleusuario.utils.Validacao;
+import com.kap.controleusuario.validacao.ValidacaoTarefa;
+import com.kap.controleusuario.validacao.ValidacaoUsuario;
 
 @Service
 public class TarefaServiceImpl implements TarefaService {
@@ -25,11 +26,11 @@ public class TarefaServiceImpl implements TarefaService {
 	private TarefaRepository tarefaRepository;
 
 	@Autowired
-	private Validacao validacao;
+	private ValidacaoTarefa validacao;
 
 	public Tarefa salvarTarefa(Tarefa tarefa) {
 
-		tarefa.setCodigo(validacao.gerarCodigo());
+		tarefa.setCodigo(validacao.gerarCodigoTarefa());
 		tarefa.setStatus(TipoStatus.CRIADO);
 
 		return this.tarefaRepository.save(tarefa);
@@ -38,9 +39,7 @@ public class TarefaServiceImpl implements TarefaService {
 	@Override
 	public List<Tarefa> listarTarefasPorUsuarioMatricula(Long matricula) throws NotFoundException {
 
-		Long usuario_id = this.validacao.usuarioPorMatricula(matricula).getId();
-
-		List<Tarefa> tarefa = this.tarefaRepository.findByUsuarioId(usuario_id);
+		List<Tarefa> tarefa = this.tarefaRepository.findByUsuarioId(validacao.usuarioPorMatricula(matricula));
 
 		if (tarefa == null) {
 			throw new NotFoundException("Não possui tarefa atrelada ao Usuario");
@@ -70,9 +69,7 @@ public class TarefaServiceImpl implements TarefaService {
 	@Override
 	public List<Tarefa> listarTarefasAtivasUsuario(Long matricula) throws NotFoundException {
 
-		Long usuario_id = this.validacao.usuarioPorMatricula(matricula).getId();
-
-		List<Tarefa> tarefa = this.tarefaRepository.findByUsuarioId(usuario_id).stream()
+		List<Tarefa> tarefa = this.tarefaRepository.findByUsuarioId(validacao.usuarioPorMatricula(matricula)).stream()
 				.filter(dados -> !(TipoStatus.CANCELADO.equals(dados.getStatus())
 						|| TipoStatus.FINALIZADO.equals(dados.getStatus())))
 				.collect(Collectors.toList());
@@ -88,5 +85,7 @@ public class TarefaServiceImpl implements TarefaService {
 	public TipoStatus[] status() {
 		return TipoStatus.values();
 	}
+	
+	
 
 }

@@ -1,0 +1,6 @@
+ALTER TABLE usuario
+  ADD COLUMN cpf VARCHAR(11) NOT NULL,
+  ADD COLUMN data_nascimento DATE NOT NULL;
+
+
+  

@@ -12,8 +12,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 
-import com.kap.controleusuario.utils.TipoStatus;
+import com.kap.controleusuario.enums.TipoStatus;
 
 @Entity (name="tarefa")
 public class Tarefa {
@@ -27,6 +28,8 @@ public class Tarefa {
 	private String codigo;
 	
 	private Date dataCriacao;
+	
+	private Date dataAtualizacao;
 	
 	private TipoStatus status;
 
@@ -67,11 +70,6 @@ public class Tarefa {
 		this.dataCriacao = dataCriacao;
 	}
 	
-	@PrePersist
-    public void prePersist() {
-        final Date atual = new Date();
-        dataCriacao = atual;
-    }
 	@Enumerated(EnumType.STRING)
 	@Column(name="status", nullable = false)
 	public TipoStatus getStatus() {
@@ -90,5 +88,26 @@ public class Tarefa {
 	public void setCodigo(String codigo) {
 		this.codigo = codigo;
 	}
+	
+	@Column(name="data_atualizacao", nullable = false)
+	public Date getDataAtualizacao() {
+		return dataAtualizacao;
+	}
+
+	public void setDataAtualizacao(Date dataAtualizacao) {
+		this.dataAtualizacao = dataAtualizacao;
+	}
+	
+	@PrePersist
+    public void prePersist() {
+        final Date atual = new Date();
+        dataCriacao = atual;
+        dataAtualizacao = atual;
+    }
+	
+	@PreUpdate
+    public void preUpdate() {
+        dataAtualizacao = new Date();
+    }
 	
 }

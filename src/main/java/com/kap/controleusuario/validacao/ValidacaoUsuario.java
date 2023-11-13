@@ -1,4 +1,4 @@
-package com.kap.controleusuario.utils;
+package com.kap.controleusuario.validacao;
 
 import java.util.Optional;
 import java.util.Random;
@@ -16,16 +16,13 @@ import com.kap.controleusuario.repositories.TarefaRepository;
 import com.kap.controleusuario.repositories.UsuarioRepository;
 
 @Component
-public class Validacao {
+public class ValidacaoUsuario {
 	
-	private static final Logger log = LoggerFactory.getLogger(Validacao.class);
+	private static final Logger log = LoggerFactory.getLogger(ValidacaoUsuario.class);
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
-	
-	@Autowired
-	private TarefaRepository tarefaRepository;
-		
+			
 	public long gerarMatriculaUsuarioValidacao() {
 		Random valor = new Random();
 		long matricula = (long) valor.nextInt(900_000) + 100_000;
@@ -61,17 +58,7 @@ public class Validacao {
 		return usuario.get();
 	}
 	
-	public String gerarCodigo() {
-		Random random = new Random();
-		String codigo = "X" + (10000 + random.nextInt(90000));
-		
-		Optional<Tarefa> tarefa = this.tarefaRepository.findByCodigo(codigo);
-		
-		if(tarefa.isPresent()) {
-			gerarCodigo();
-		}
-		return codigo;
-	}
+	
 	
 
 }

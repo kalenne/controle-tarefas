@@ -4,8 +4,9 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.br.CPF;
 
-import com.kap.controleusuario.utils.TipoStatus.UsuarioStatus;
+import com.kap.controleusuario.enums.TipoStatus.UsuarioStatus;
 
 public class UsuarioDto {
 
@@ -18,6 +19,10 @@ public class UsuarioDto {
 	private String senha;
 
 	private UsuarioStatus status;
+	
+	private String cpf;
+	
+	private String data_nascimento;
 
 	public Long getId() {
 		return id;
@@ -56,7 +61,7 @@ public class UsuarioDto {
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
-
+	
 	public UsuarioStatus getStatus() {
 		return status;
 	}
@@ -64,5 +69,28 @@ public class UsuarioDto {
 	public void setStatus(UsuarioStatus status) {
 		this.status = status;
 	}
+
+	@NotEmpty(message="CPF não pode ser vazio.")
+	@CPF(message="CPF inválido.")
+	public String getCpf() {
+		return cpf;
+	}
+
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
+	}
+	
+	@NotEmpty(message = "Data de nascimento não pode ser vazia.")
+	public String getData_nascimento() {
+		return data_nascimento;
+	}
+
+	public void setData_nascimento(String data_nascimento) {
+		this.data_nascimento = data_nascimento;
+	}
+	
+	
+	
+	
 
 }

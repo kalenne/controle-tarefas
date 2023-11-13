@@ -1,6 +1,9 @@
 package com.kap.controleusuario.controllers;
 
+import java.text.ParseException;
 import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,9 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kap.controleusuario.dtos.UsuarioDto;
 import com.kap.controleusuario.entities.Usuario;
+import com.kap.controleusuario.enums.UserRoles;
 import com.kap.controleusuario.exception.NotFoundException;
 import com.kap.controleusuario.services.UsuarioService;
-import com.kap.controleusuario.utils.UserRoles;
+import com.kap.controleusuario.utils.FormatDate;
 
 @RestController
 @RequestMapping("/api/usuario")
@@ -27,7 +31,7 @@ public class UsuarioController {
 	private UsuarioService usuarioService;
 
 	@PostMapping
-	public ResponseEntity salvarUsuario(@RequestBody UsuarioDto cadastroUsuarioDto) {
+	public ResponseEntity salvarUsuario(@Valid @RequestBody UsuarioDto cadastroUsuarioDto) {
 
 		Usuario usuario = this.converterDtoparaUsuario(cadastroUsuarioDto);
 		this.usuarioService.salvarUsuario(usuario);
@@ -46,48 +50,53 @@ public class UsuarioController {
 	}
 
 	@PutMapping("/editar")
-	public ResponseEntity editarUsuarioPorEmail(@RequestBody UsuarioDto cadastroUsuarioDto) {
+	public ResponseEntity editarUsuarioPorEmail(@Valid @RequestBody UsuarioDto cadastroUsuarioDto) {
 
 		Usuario usuario = this.converterDtoparaUsuario(cadastroUsuarioDto);
 		this.usuarioService.editarUsuarioPorEmail(usuario);
 
-		return new ResponseEntity(HttpStatus.CREATED);
+		return new ResponseEntity(HttpStatus.OK);
 	}
 
 	@PutMapping("/editar/{matricula}")
 	public ResponseEntity editarUsuarioPorMatricula(@PathVariable Long matricula,
-			@RequestBody UsuarioDto cadastroUsuarioDto) {
+			@Valid @RequestBody UsuarioDto cadastroUsuarioDto) {
 
 		Usuario usuario = this.converterDtoparaUsuario(cadastroUsuarioDto);
 		this.usuarioService.editarUsuarioPorMatricula(matricula, usuario);
 
-		return new ResponseEntity(HttpStatus.CREATED);
-	}
-
-	@PutMapping("/del/{matricula}")
-	public ResponseEntity exclusaoUsuario(@PathVariable Long matricula) throws NotFoundException {
-		this.usuarioService.exclusaoUsuario(matricula);
-
-		return new ResponseEntity(HttpStatus.ACCEPTED);
+		return new ResponseEntity(HttpStatus.OK);
 	}
 
 	private Usuario converterDtoparaUsuario(UsuarioDto cadastroUsuarioDto) {
-
+		
+		FormatDate fd = new FormatDate();
 		Usuario usuario = new Usuario();
-		usuario.setNome(cadastroUsuarioDto.getNome());
-		usuario.setEmail(cadastroUsuarioDto.getEmail());
-		usuario.setSenha(cadastroUsuarioDto.getSenha());
-		usuario.setRoles(UserRoles.ROLE_USER);
-		usuario.setStatus(cadastroUsuarioDto.getStatus());
+		try {
+			
+			usuario.setNome(cadastroUsuarioDto.getNome());
+			usuario.setEmail(cadastroUsuarioDto.getEmail());
+			usuario.setSenha(cadastroUsuarioDto.getSenha());
+			usuario.setRoles(UserRoles.ROLE_USER);
+			usuario.setStatus(cadastroUsuarioDto.getStatus());
+			usuario.setCpf(cadastroUsuarioDto.getCpf());
+			usuario.setDataNascimento(fd.userToDb(cadastroUsuarioDto.getData_nascimento()));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return usuario;
 	}
 
 	private UsuarioDto converterUsuarioParaDto(Usuario usuario) {
-
+		FormatDate fd = new FormatDate();
 		UsuarioDto dto = new UsuarioDto();
+		
 		dto.setEmail(usuario.getEmail());
 		dto.setNome(usuario.getNome());
 		dto.setStatus(usuario.getStatus());
+		dto.setCpf(usuario.getCpf());
+		dto.setData_nascimento(fd.dbToUser(usuario.getDataNascimento()));
 		return dto;
 	}
 
