@@ -5,9 +5,12 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,13 +29,16 @@ import com.kap.controleusuario.utils.FormatDate;
 @RestController
 @RequestMapping("/api/usuario")
 public class UsuarioController {
-
+	
+	private static final Logger log = LoggerFactory.getLogger(UsuarioController.class);
+	
 	@Autowired
 	private UsuarioService usuarioService;
+	
+	private FormatDate fd = new FormatDate();
 
-	@PostMapping
+	@PostMapping("/salvar")
 	public ResponseEntity salvarUsuario(@Valid @RequestBody UsuarioDto cadastroUsuarioDto) {
-
 		Usuario usuario = this.converterDtoparaUsuario(cadastroUsuarioDto);
 		this.usuarioService.salvarUsuario(usuario);
 
@@ -69,11 +75,9 @@ public class UsuarioController {
 	}
 
 	private Usuario converterDtoparaUsuario(UsuarioDto cadastroUsuarioDto) {
-		
-		FormatDate fd = new FormatDate();
 		Usuario usuario = new Usuario();
+		
 		try {
-			
 			usuario.setNome(cadastroUsuarioDto.getNome());
 			usuario.setEmail(cadastroUsuarioDto.getEmail());
 			usuario.setSenha(cadastroUsuarioDto.getSenha());
@@ -82,16 +86,13 @@ public class UsuarioController {
 			usuario.setCpf(cadastroUsuarioDto.getCpf());
 			usuario.setDataNascimento(fd.userToDb(cadastroUsuarioDto.getData_nascimento()));
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return usuario;
 	}
 
 	private UsuarioDto converterUsuarioParaDto(Usuario usuario) {
-		FormatDate fd = new FormatDate();
 		UsuarioDto dto = new UsuarioDto();
-		
 		dto.setEmail(usuario.getEmail());
 		dto.setNome(usuario.getNome());
 		dto.setStatus(usuario.getStatus());

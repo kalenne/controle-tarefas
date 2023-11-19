@@ -9,8 +9,8 @@ import com.kap.controleusuario.entities.Usuario;
 import com.kap.controleusuario.enums.TipoStatus.UsuarioStatus;
 import com.kap.controleusuario.exception.NotFoundException;
 import com.kap.controleusuario.repositories.UsuarioRepository;
+import com.kap.controleusuario.security.utils.SenhaUtils;
 import com.kap.controleusuario.services.UsuarioService;
-import com.kap.controleusuario.utils.FormatDate;
 import com.kap.controleusuario.validacao.ValidacaoUsuario;
 
 @Service
@@ -22,6 +22,8 @@ public class UsuarioServiceImpl implements UsuarioService {
 	@Autowired
 	private ValidacaoUsuario validacao;
 
+	private SenhaUtils senha;
+	
 	@Override
 	public Optional<Usuario> buscarPorMatricula(Long matricula) throws NotFoundException {
 
@@ -52,6 +54,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 		usuario.setMatricula(validacao.gerarMatriculaUsuarioValidacao());
 		usuario.setEmail(validacao.usuarioValidaEmail(usuario.getEmail()));
 		usuario.setStatus(UsuarioStatus.ATIVO);
+		usuario.setSenha(senha.gerarBCrypt(usuario.getSenha()));
 		return this.usuarioRepository.save(usuario);
 	}
 
