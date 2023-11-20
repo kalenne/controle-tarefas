@@ -1,37 +1,42 @@
 package com.kap.controleusuario.security;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.kap.controleusuario.entities.Usuario;
-
-public class JwtUsuario implements UserDetails {
+public class JwtUser implements UserDetails {
 	
-	private static final long serialVersionUID = -3717027739690032009L;
 	
-	private Optional<Usuario> usuario;
+	private static final long serialVersionUID = -1429864457599304218L;
+	private Long id;
+	private String username;
+	private String password;
+	private Collection<? extends GrantedAuthority> authorities;
 	
-	public JwtUsuario(Optional<Usuario> usuario) {
-		this.usuario = usuario;
+	public JwtUser(Long id, String username, String password, Collection<? extends GrantedAuthority> authorities) {
+		this.id = id;
+		this.username = username;
+		this.password = password;
+		this.authorities = authorities;
+	}
+	public Long getId() {
+		return id;
 	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return new ArrayList<>();
+		return authorities;
 	}
 
 	@Override
 	public String getPassword() {
-		return usuario.orElse(new Usuario()).getSenha();
+		return password;
 	}
 
 	@Override
 	public String getUsername() {
-		return usuario.orElse(new Usuario()).getEmail();
+		return username;
 	}
 
 	@Override
@@ -53,4 +58,7 @@ public class JwtUsuario implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
+	
+	
+
 }

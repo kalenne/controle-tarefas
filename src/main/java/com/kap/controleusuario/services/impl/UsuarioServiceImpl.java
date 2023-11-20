@@ -1,4 +1,4 @@
-package com.kap.controleusuario.services.impl;
+	package com.kap.controleusuario.services.impl;
 
 import java.util.Optional;
 
@@ -22,8 +22,6 @@ public class UsuarioServiceImpl implements UsuarioService {
 	@Autowired
 	private ValidacaoUsuario validacao;
 
-	private SenhaUtils senha;
-	
 	@Override
 	public Optional<Usuario> buscarPorMatricula(Long matricula) throws NotFoundException {
 
@@ -54,7 +52,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 		usuario.setMatricula(validacao.gerarMatriculaUsuarioValidacao());
 		usuario.setEmail(validacao.usuarioValidaEmail(usuario.getEmail()));
 		usuario.setStatus(UsuarioStatus.ATIVO);
-		usuario.setSenha(senha.gerarBCrypt(usuario.getSenha()));
+		usuario.setSenha(SenhaUtils.gerarBCrypt(usuario.getSenha()));
 		return this.usuarioRepository.save(usuario);
 	}
 

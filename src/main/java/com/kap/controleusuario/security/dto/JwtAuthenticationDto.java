@@ -4,6 +4,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 public class JwtAuthenticationDto {
+	
 	private String email;
 	private String senha;
 	
@@ -32,4 +33,5 @@ public class JwtAuthenticationDto {
 	public String toString() {
 		return "JwtAuthenticationDto [email=" + email + ", senha=" + senha + "]";
 	}
+	
 }

@@ -9,22 +9,24 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.kap.controleusuario.entities.Usuario;
-import com.kap.controleusuario.security.JwtUsuario;
+import com.kap.controleusuario.security.JwtUserFactory;
 import com.kap.controleusuario.services.UsuarioService;
 
 @Service
-public class UserDetailServiceImpl implements UserDetailsService{
+public class JwtUserDetailsServiceImpl implements UserDetailsService {
 	
 	@Autowired
 	private UsuarioService usuarioService;
-	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		
 		Optional<Usuario> usuario = usuarioService.buscarPorEmail(username);
-		if (!usuario.isPresent()) {
-			throw new UsernameNotFoundException("Usuario [" + username + "] nao encontrado" );
+		
+		if(usuario.isPresent()) {
+			return JwtUserFactory.create(usuario.get());
 		}
 		
-		return new JwtUsuario(usuario);
+		throw new UsernameNotFoundException("Email não encontrado.");
 	}
+	
 }
