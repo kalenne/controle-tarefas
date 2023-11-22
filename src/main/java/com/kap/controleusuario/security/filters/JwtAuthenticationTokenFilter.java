@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.kap.controleusuario.exception.UnauthorizedException;
 import com.kap.controleusuario.security.utils.JwtTokenUtil;
 
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
@@ -30,9 +31,10 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {
+			throws ServletException, IOException, UnauthorizedException {
 		
 		String token = request.getHeader(AUTH_HEADER);
+			
 		if (token != null && token.startsWith(BEARER_PREFIX)){
 			token = token.substring(7);
 		}
@@ -47,7 +49,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 						new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				SecurityContextHolder.getContext().setAuthentication(authentication);
-			}
+			} 
 		}
 		
 		filterChain.doFilter(request, response);

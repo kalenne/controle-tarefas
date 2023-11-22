@@ -8,11 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.kap.controleusuario.entities.Tarefa;
 import com.kap.controleusuario.entities.Usuario;
 import com.kap.controleusuario.exception.AlreadyExistsException;
 import com.kap.controleusuario.exception.NotFoundException;
-import com.kap.controleusuario.repositories.TarefaRepository;
 import com.kap.controleusuario.repositories.UsuarioRepository;
 
 @Component
@@ -41,7 +39,7 @@ public class ValidacaoUsuario {
 		Optional<Usuario> usuario = this.usuarioRepository.findByEmail(email);
 		
 		if(usuario.isPresent()) {
-			throw new AlreadyExistsException("E-mail ja cadastrado");
+			throw new AlreadyExistsException("E-mail já cadastrado na base de dados.");
 		}
 				
 		return email;
@@ -52,10 +50,22 @@ public class ValidacaoUsuario {
 		Optional<Usuario> usuario = this.usuarioRepository.findByMatricula(matricula);
 		
 		if(!usuario.isPresent()) {
-			throw new NotFoundException("Usuario inexistente");
+			throw new NotFoundException("Usuario inexistente na base de dados.");
 		}
 		
 		return usuario.get();
+	}
+	
+	public String usuarioValidaCpf(String cpf) throws AlreadyExistsException {
+		
+		Optional<Usuario> usuario = this.usuarioRepository.findByCpf(cpf);
+		
+		if(usuario.isPresent()) {
+			throw new NotFoundException("CPF já cadastrado na base de dados.");
+		}
+		
+		return cpf;
+
 	}
 	
 	

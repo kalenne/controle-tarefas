@@ -46,7 +46,7 @@ public class UsuarioController {
 		return new ResponseEntity(HttpStatus.CREATED);
 
 	}
-	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+	
 	@GetMapping("/{matricula}")
 	public ResponseEntity<UsuarioDto> listarUsuarioPorMatricula(@PathVariable Long matricula) throws NotFoundException {
 		Optional<Usuario> usuario = this.usuarioService.buscarPorMatricula(matricula);
@@ -65,6 +65,7 @@ public class UsuarioController {
 		return new ResponseEntity(HttpStatus.OK);
 	}
 
+	
 	@PutMapping("/editar/{matricula}")
 	public ResponseEntity editarUsuarioPorMatricula(@PathVariable Long matricula,
 			@Valid @RequestBody UsuarioDto cadastroUsuarioDto) {
@@ -82,7 +83,6 @@ public class UsuarioController {
 			usuario.setNome(cadastroUsuarioDto.getNome());
 			usuario.setEmail(cadastroUsuarioDto.getEmail());
 			usuario.setSenha(cadastroUsuarioDto.getSenha());
-			usuario.setRoles(UserRoles.ROLE_USER);
 			usuario.setStatus(cadastroUsuarioDto.getStatus());
 			usuario.setCpf(cadastroUsuarioDto.getCpf());
 			usuario.setDataNascimento(fd.userToDb(cadastroUsuarioDto.getData_nascimento()));

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kap.controleusuario.entities.Usuario;
+import com.kap.controleusuario.enums.UserRoles;
 import com.kap.controleusuario.enums.TipoStatus.UsuarioStatus;
 import com.kap.controleusuario.exception.NotFoundException;
 import com.kap.controleusuario.repositories.UsuarioRepository;
@@ -52,6 +53,8 @@ public class UsuarioServiceImpl implements UsuarioService {
 		usuario.setMatricula(validacao.gerarMatriculaUsuarioValidacao());
 		usuario.setEmail(validacao.usuarioValidaEmail(usuario.getEmail()));
 		usuario.setStatus(UsuarioStatus.ATIVO);
+		usuario.setRoles(UserRoles.ROLE_USER);
+		usuario.setCpf(validacao.usuarioValidaCpf(usuario.getCpf()));
 		usuario.setSenha(SenhaUtils.gerarBCrypt(usuario.getSenha()));
 		return this.usuarioRepository.save(usuario);
 	}
@@ -93,9 +96,8 @@ public class UsuarioServiceImpl implements UsuarioService {
 	}
 	
 	private Usuario setUsuarioEditado(Usuario usuario, Usuario UsuarioEditado) {
-		usuario.setEmail(UsuarioEditado.getEmail());
 		usuario.setNome(UsuarioEditado.getNome());
-		usuario.setSenha(UsuarioEditado.getSenha());
+		usuario.setSenha(SenhaUtils.gerarBCrypt(UsuarioEditado.getSenha()));
 		if (UsuarioEditado.getRoles() != null) {
 			usuario.setRoles(UsuarioEditado.getRoles());
 		}

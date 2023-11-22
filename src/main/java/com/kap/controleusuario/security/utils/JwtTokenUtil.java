@@ -25,12 +25,6 @@ public class JwtTokenUtil {
 	@Value("${jwt.expiration}")
 	private Long expiration;
 	
-	
-	/***
-	 * Retorna o username utilizando no token.
-	 * @param token
-	 * @return
-	 */
 	public String getUsernameFromToken(String token) {
 		String username;
 		try {
@@ -41,11 +35,7 @@ public class JwtTokenUtil {
 		}
 		return username;
 	}
-	/***
-	 * Para retornar a data de expiracao do token.
-	 * @param token
-	 * @return
-	 */
+	
 	public Date getExpirationDateFromToken(String token) {
 		Date expiracao;
 		try {
@@ -58,11 +48,6 @@ public class JwtTokenUtil {
 		return expiracao;
 	}
 	
-	/***
-	 * Atualizar o token;
-	 * @param token
-	 * @return
-	 */
 	public String refreshToken (String token) {
 		String tokenAtualizado;
 		try {
@@ -75,19 +60,10 @@ public class JwtTokenUtil {
 		return tokenAtualizado;
 	}
 	
-	/***
-	 * Checa se o token está valido.
-	 * @param token
-	 * @return
-	 */
 	public boolean tokenValido(String token) {
 		return !tokenExpirado(token);
 	}
-	/***
-	 * Gera o novo token.
-	 * @param userDetails
-	 * @return
-	 */
+	
 	public String obterToken (UserDetails userDetails) {
 		Map<String, Object> claims = new HashMap<>();
 		claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
@@ -100,11 +76,6 @@ public class JwtTokenUtil {
 		return gerarToken(claims);
 	}
 	
-	/***
-	 * Extrai as informações contidas no corpo.
-	 * @param token
-	 * @return
-	 */
 	private Claims getClaimsFromToken(String token) {
 		Claims claims;
 		
@@ -125,9 +96,7 @@ public class JwtTokenUtil {
 	private Date gerarDataExpiracao() {
 		return new Date(System.currentTimeMillis() + expiration * 1000);
 	}
-	
-	
-	
+		
 	private boolean tokenExpirado(String token) {
 		Date dataExpiracao = this.getExpirationDateFromToken(token);
 		
@@ -136,7 +105,5 @@ public class JwtTokenUtil {
 		}
 		
 		return dataExpiracao.before(new Date());
-	}
-	
-	
+	}	
 }
