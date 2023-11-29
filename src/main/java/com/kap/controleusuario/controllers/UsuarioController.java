@@ -46,13 +46,22 @@ public class UsuarioController {
 		return new ResponseEntity(HttpStatus.CREATED);
 
 	}
-	
+
 	@GetMapping("/{matricula}")
 	public ResponseEntity<UsuarioDto> listarUsuarioPorMatricula(@PathVariable Long matricula) throws NotFoundException {
 		Optional<Usuario> usuario = this.usuarioService.buscarPorMatricula(matricula);
 
 		UsuarioDto dto = converterUsuarioParaDto(usuario.get());
 
+		return new ResponseEntity<UsuarioDto>(dto, HttpStatus.ACCEPTED);
+	}
+	
+	@GetMapping("/e/{email}")
+	public ResponseEntity<UsuarioDto> listarUsuarioPorEmail(@PathVariable String email) throws NotFoundException {
+		Optional<Usuario> usuario = this.usuarioService.buscarPorEmail(email);
+		
+		UsuarioDto dto = converterUsuarioParaDto(usuario.get());
+		
 		return new ResponseEntity<UsuarioDto>(dto, HttpStatus.ACCEPTED);
 	}
 
@@ -85,7 +94,7 @@ public class UsuarioController {
 			usuario.setSenha(cadastroUsuarioDto.getSenha());
 			usuario.setStatus(cadastroUsuarioDto.getStatus());
 			usuario.setCpf(cadastroUsuarioDto.getCpf());
-			usuario.setDataNascimento(fd.userToDb(cadastroUsuarioDto.getData_nascimento()));
+			usuario.setDataNascimento(fd.userToDb(cadastroUsuarioDto.getDataNascimento()));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

@@ -22,7 +22,7 @@ public class UsuarioDto {
 	
 	private String cpf;
 	
-	private String data_nascimento;
+	private String dataNascimento;
 
 	public Long getId() {
 		return id;
@@ -81,12 +81,12 @@ public class UsuarioDto {
 	}
 	
 	@NotEmpty(message = "Data de nascimento não pode ser vazia.")
-	public String getData_nascimento() {
-		return data_nascimento;
+	public String getDataNascimento() {
+		return dataNascimento;
 	}
 
 	public void setData_nascimento(String data_nascimento) {
-		this.data_nascimento = data_nascimento;
+		this.dataNascimento = data_nascimento;
 	}
 	
 	

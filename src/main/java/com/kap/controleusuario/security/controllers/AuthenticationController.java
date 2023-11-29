@@ -16,11 +16,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kap.controleusuario.exception.UnauthorizedException;
 import com.kap.controleusuario.response.Response;
 import com.kap.controleusuario.security.dto.JwtAuthenticationDto;
 import com.kap.controleusuario.security.dto.TokenDto;
@@ -93,6 +97,21 @@ public class AuthenticationController {
 		response.setData (new TokenDto(tokenAtualizado));
 		return ResponseEntity.ok(response);
 	}
+	
+	@GetMapping("/{token}")
+	public ResponseEntity<Response> retornaUsernameAutenticado(@PathVariable String token) {
+		
+		String username = jwtTokenUtil.getUsernameFromToken(token);
+		
+		Response<String> response = new Response<String>();
+		
+		response.setData(username);
+		
+		return ResponseEntity.ok(response);
+		
+	}
+	
+	
 	
 
 }

@@ -1,8 +1,11 @@
 package com.kap.controleusuario.security.config;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -14,6 +17,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.kap.controleusuario.security.JwtAuthenticationEntryPoint;
 import com.kap.controleusuario.security.filters.JwtAuthenticationTokenFilter;
@@ -51,7 +57,11 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		
-		http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and().authorizeRequests().antMatchers("/auth","/api/usuario/salvar").permitAll().anyRequest()
+		http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
+			.and().authorizeRequests()
+			.antMatchers("/auth","/api/usuario/salvar").permitAll()
+			.antMatchers(HttpMethod.GET, "/auth/**").permitAll()
+			.anyRequest()
 				.authenticated().and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		 http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
@@ -61,6 +71,16 @@ public class SecurityConfig {
 	@Bean
     public JwtAuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
         return new JwtAuthenticationTokenFilter();
+    }
+	
+	@Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+       
+        CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
+        corsConfiguration.setAllowedMethods(Arrays.asList("*"));
+        source.registerCorsConfiguration("/**", corsConfiguration);
+        return source;
     }
 	
 	
