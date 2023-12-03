@@ -56,14 +56,13 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		
-		http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
-			.and().authorizeRequests()
-			.antMatchers("/auth","/api/usuario/salvar").permitAll()
-			.antMatchers(HttpMethod.GET, "/auth/**").permitAll()
-			.anyRequest()
-				.authenticated().and().sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        http.cors().and().csrf(csrf -> csrf.disable()).exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandler)).authorizeRequests(requests -> requests
+                .antMatchers("/auth", "/api/usuario/salvar").permitAll()
+                .antMatchers(HttpMethod.GET, "/auth/**").permitAll()
+                .anyRequest()
+                .authenticated()).sessionManagement(management -> management
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 		 http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 

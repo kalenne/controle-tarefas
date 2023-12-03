@@ -38,7 +38,7 @@ public class TarefaController {
 		Tarefa tarefa = this.converterDtoparaTarefa(cadastrarTarefaDto);
 		this.tarefaService.salvarTarefa(tarefa);
 
-		return new ResponseEntity(HttpStatus.CREATED);
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@GetMapping(value = "/{matricula}/ativo")
@@ -48,7 +48,7 @@ public class TarefaController {
 		List<Tarefa> tarefa = this.tarefaService.listarTarefasAtivasUsuario(matricula);
 		List<TarefaDto> cadastrarTarefaDtos = converterTarefaParaDto(tarefa);
 
-		return new ResponseEntity<List<TarefaDto>>(cadastrarTarefaDtos, HttpStatus.OK);
+		return new ResponseEntity<>(cadastrarTarefaDtos, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/{matricula}")
@@ -83,16 +83,14 @@ public class TarefaController {
 
 	private List<TarefaDto> converterTarefaParaDto(List<Tarefa> tarefa) {
 
-		List<TarefaDto> listTarefaDto = tarefa.stream().map(dados -> {
+		return tarefa.stream().map(dados -> {
 			TarefaDto cadastrarTarefaDto = new TarefaDto();
 			cadastrarTarefaDto.setCodigo(dados.getCodigo());
 			cadastrarTarefaDto.setMatricula(dados.getUsuario().getMatricula());
 			cadastrarTarefaDto.setStatus(dados.getStatus());
 			cadastrarTarefaDto.setDescricao(dados.getDescricao());
-			cadastrarTarefaDto.setNome_usuario(dados.getUsuario().getNome());
+			cadastrarTarefaDto.setNomeUsuario(dados.getUsuario().getNome());
 			return cadastrarTarefaDto;
 		}).collect(Collectors.toList());
-
-		return listTarefaDto;
 	}
 }

@@ -97,7 +97,9 @@ public class UsuarioServiceImpl implements UsuarioService {
 	
 	private Usuario setUsuarioEditado(Usuario usuario, Usuario UsuarioEditado) {
 		usuario.setNome(UsuarioEditado.getNome());
-		usuario.setSenha(SenhaUtils.gerarBCrypt(UsuarioEditado.getSenha()));
+		if(UsuarioEditado.getSenha() != null) {
+			usuario.setSenha(SenhaUtils.gerarBCrypt(UsuarioEditado.getSenha()));
+		}
 		if (UsuarioEditado.getRoles() != null) {
 			usuario.setRoles(UsuarioEditado.getRoles());
 		}

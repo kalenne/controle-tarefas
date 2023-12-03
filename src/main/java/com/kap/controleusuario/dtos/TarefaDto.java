@@ -11,7 +11,7 @@ public class TarefaDto {
 	private Long id;
 	private String descricao;
 	private Long matricula;
-	private String nome_usuario;
+	private String nomeUsuario;
 	private TipoStatus status;
 	private String codigo;
 
@@ -61,12 +61,12 @@ public class TarefaDto {
 	}
 
 	@NotEmpty(message = "Nome não pode ser vazio")
-	public String getNome_usuario() {
-		return nome_usuario;
+	public String getNomeUsuario() {
+		return nomeUsuario;
 	}
 
-	public void setNome_usuario(String nome_usuario) {
-		this.nome_usuario = nome_usuario;
+	public void setNomeUsuario(String nome_usuario) {
+		this.nomeUsuario = nome_usuario;
 	}
 
 }
