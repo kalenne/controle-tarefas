@@ -65,8 +65,8 @@ public class TarefaDto {
 		return nomeUsuario;
 	}
 
-	public void setNomeUsuario(String nome_usuario) {
-		this.nomeUsuario = nome_usuario;
+	public void setNomeUsuario(String nomeUsuario) {
+		this.nomeUsuario = nomeUsuario;
 	}
 
 }

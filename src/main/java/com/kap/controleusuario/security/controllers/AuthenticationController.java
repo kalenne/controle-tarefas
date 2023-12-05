@@ -49,7 +49,7 @@ public class AuthenticationController {
 	public ResponseEntity<Response<TokenDto>> gerarTokenJwt
 		(@Valid @RequestBody JwtAuthenticationDto authenticationDto, BindingResult result) throws AuthenticationException {
 		
-		Response<TokenDto> response = new Response<TokenDto>();
+		Response<TokenDto> response = new Response<>();
 		
 		if (result.hasErrors()) {
 			result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
@@ -72,14 +72,11 @@ public class AuthenticationController {
 	
 	@PostMapping("/refresh")
 	public ResponseEntity<Response<TokenDto>> gerarRefreshToken(HttpServletRequest request) {
-		Response<TokenDto> response = new Response<TokenDto>();
+		Response<TokenDto> response = new Response<>();
 		
 		Optional<String> token = Optional.ofNullable(request.getHeader(TOKEN_HEADER));
-		
-		if (token.isPresent() && token.get().startsWith(BEARER_PREFIX)) {
-			token = Optional.of(token.get().substring(7));
-		}
-		
+		String tokenAtualizado = "";
+			
 		if(!token.isPresent()) {
 			response.getErrors().add("Token não informado.");
 		} else if (!jwtTokenUtil.tokenValido(token.get())) {
@@ -90,18 +87,21 @@ public class AuthenticationController {
 			return ResponseEntity.badRequest().body(response);
 		}
 		
-		String tokenAtualizado = jwtTokenUtil.refreshToken(token.get());
-		
+		if (token.isPresent() && token.get().startsWith(BEARER_PREFIX)) {
+			token = Optional.of(token.get().substring(7));
+			tokenAtualizado = jwtTokenUtil.refreshToken(token.get());
+		}
+			
 		response.setData (new TokenDto(tokenAtualizado));
 		return ResponseEntity.ok(response);
 	}
 	
 	@GetMapping("/{token}")
-	public ResponseEntity<Response> retornaUsernameAutenticado(@PathVariable String token) {
+	public ResponseEntity<Response<String>> retornaUsernameAutenticado(@PathVariable String token) {
 		
 		String username = jwtTokenUtil.getUsernameFromToken(token);
 		
-		Response<String> response = new Response<String>();
+		Response<String> response = new Response<>();
 		
 		response.setData(username);
 		

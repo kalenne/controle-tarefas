@@ -24,18 +24,19 @@ import com.kap.controleusuario.dtos.UsuarioDto;
 import com.kap.controleusuario.entities.Usuario;
 import com.kap.controleusuario.enums.UserRoles;
 import com.kap.controleusuario.exception.NotFoundException;
+import com.kap.controleusuario.response.Response;
 import com.kap.controleusuario.services.UsuarioService;
 import com.kap.controleusuario.utils.FormatDate;
 
 @RestController
 @RequestMapping("/api/usuario")
 public class UsuarioController {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(UsuarioController.class);
-	
+
 	@Autowired
 	private UsuarioService usuarioService;
-	
+
 	private FormatDate fd = new FormatDate();
 
 	@PostMapping("/salvar")
@@ -48,21 +49,35 @@ public class UsuarioController {
 	}
 
 	@GetMapping("/{matricula}")
-	public ResponseEntity<UsuarioDto> listarUsuarioPorMatricula(@PathVariable Long matricula) throws NotFoundException {
+	public ResponseEntity<Response<UsuarioDto>> listarUsuarioPorMatricula(@PathVariable Long matricula)
+			throws NotFoundException {
+		Response<UsuarioDto> response = new Response<>();
+		UsuarioDto dto = new UsuarioDto();
+
 		Optional<Usuario> usuario = this.usuarioService.buscarPorMatricula(matricula);
+		if (usuario.isPresent()) {
+			dto = converterUsuarioParaDto(usuario.get());
+		}
+		
+		response.setData(dto);
 
-		UsuarioDto dto = converterUsuarioParaDto(usuario.get());
-
-		return new ResponseEntity<UsuarioDto>(dto, HttpStatus.ACCEPTED);
+		return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
 	}
-	
+
 	@GetMapping("/e/{email}")
-	public ResponseEntity<UsuarioDto> listarUsuarioPorEmail(@PathVariable String email) throws NotFoundException {
+	public ResponseEntity<Response<UsuarioDto>> listarUsuarioPorEmail(@PathVariable String email)
+			throws NotFoundException {
+		Response<UsuarioDto> response = new Response<>();
+		UsuarioDto dto = new UsuarioDto();
+		
 		Optional<Usuario> usuario = this.usuarioService.buscarPorEmail(email);
+		if (usuario.isPresent()) {
+			dto = converterUsuarioParaDto(usuario.get());
+		}
 		
-		UsuarioDto dto = converterUsuarioParaDto(usuario.get());
-		
-		return new ResponseEntity<UsuarioDto>(dto, HttpStatus.ACCEPTED);
+		response.setData(dto);
+
+		return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
 	}
 
 	@PutMapping("/editar")
@@ -74,7 +89,6 @@ public class UsuarioController {
 		return new ResponseEntity(HttpStatus.OK);
 	}
 
-	
 	@PutMapping("/editar/{matricula}")
 	public ResponseEntity editarUsuarioPorMatricula(@PathVariable Long matricula,
 			@Valid @RequestBody UsuarioDto cadastroUsuarioDto) {
@@ -87,7 +101,7 @@ public class UsuarioController {
 
 	private Usuario converterDtoparaUsuario(UsuarioDto cadastroUsuarioDto) {
 		Usuario usuario = new Usuario();
-		
+
 		try {
 			usuario.setNome(cadastroUsuarioDto.getNome());
 			usuario.setEmail(cadastroUsuarioDto.getEmail());
@@ -107,7 +121,7 @@ public class UsuarioController {
 		dto.setNome(usuario.getNome());
 		dto.setStatus(usuario.getStatus());
 		dto.setCpf(usuario.getCpf());
-		dto.setData_nascimento(fd.dbToUser(usuario.getDataNascimento()));
+		dto.setDataNascimento(fd.dbToUser(usuario.getDataNascimento()));
 		return dto;
 	}
 

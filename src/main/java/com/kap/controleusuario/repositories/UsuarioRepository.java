@@ -13,7 +13,7 @@ import com.kap.controleusuario.entities.Usuario;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
-	Optional<Usuario> findByMatricula(@Param("matricula") Long Matricula);
+	Optional<Usuario> findByMatricula(@Param("matricula") Long matricula);
 
 	Optional<Usuario> findByEmail(String email);
 	

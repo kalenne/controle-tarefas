@@ -85,8 +85,8 @@ public class UsuarioDto {
 		return dataNascimento;
 	}
 
-	public void setData_nascimento(String data_nascimento) {
-		this.dataNascimento = data_nascimento;
+	public void setDataNascimento(String DataNascimento) {
+		this.dataNascimento = DataNascimento;
 	}
 	
 	

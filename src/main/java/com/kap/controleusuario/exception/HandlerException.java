@@ -57,4 +57,19 @@ public class HandlerException {
 		return new ResponseEntity<ResponseException>(re, HttpStatus.BAD_REQUEST);
 
 	}
+	
+	@ExceptionHandler(UnauthorizedException.class)
+	public final ResponseEntity<ResponseException> handlerUnauthorized(UnauthorizedException ue,
+			WebRequest request) {
+		FormatLocalDateTime fldt = new FormatLocalDateTime(LocalDateTime.now());
+
+		ResponseException re = new ResponseException(fldt.formatDateTime(), ue.getMessage(),
+				request.getDescription(false));
+
+		return new ResponseEntity<ResponseException>(re, HttpStatus.UNAUTHORIZED);
+
+	}
+	
+	
+	
 }

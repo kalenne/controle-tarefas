@@ -40,8 +40,8 @@ public class SecurityConfig {
 		return new BCryptPasswordEncoder();
 	}
 
-	@Bean
-	public DaoAuthenticationProvider authenticationProvider() {
+    @Bean
+    DaoAuthenticationProvider authenticationProvider() {
 		DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
 		auth.setUserDetailsService(userDetailsService);
 		auth.setPasswordEncoder(passwordEncoder());
@@ -49,13 +49,13 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration autheticationConfiguration)
+	AuthenticationManager authenticationManager(AuthenticationConfiguration autheticationConfiguration)
 			throws Exception {
 		return autheticationConfiguration.getAuthenticationManager();
 	}
 
 	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.cors().and().csrf(csrf -> csrf.disable()).exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandler)).authorizeRequests(requests -> requests
                 .antMatchers("/auth", "/api/usuario/salvar").permitAll()
@@ -68,7 +68,7 @@ public class SecurityConfig {
 
 	}
 	@Bean
-    public JwtAuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
+    JwtAuthenticationTokenFilter authenticationTokenFilterBean() {
         return new JwtAuthenticationTokenFilter();
     }
 	

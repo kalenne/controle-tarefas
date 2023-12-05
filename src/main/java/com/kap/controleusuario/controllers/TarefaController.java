@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kap.controleusuario.dtos.TarefaDto;
 import com.kap.controleusuario.entities.Tarefa;
 import com.kap.controleusuario.exception.NotFoundException;
+import com.kap.controleusuario.response.Response;
 import com.kap.controleusuario.services.TarefaService;
 import com.kap.controleusuario.validacao.ValidacaoUsuario;
 
@@ -37,28 +38,35 @@ public class TarefaController {
 
 		Tarefa tarefa = this.converterDtoparaTarefa(cadastrarTarefaDto);
 		this.tarefaService.salvarTarefa(tarefa);
-
+		
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@GetMapping(value = "/{matricula}/ativo")
-	public ResponseEntity<List<TarefaDto>> listarTarefasAtivasUsuario(@PathVariable Long matricula)
+	public ResponseEntity<Response<List<TarefaDto>>> listarTarefasAtivasUsuario(@PathVariable Long matricula)
 			throws NotFoundException {
-
+		
+		Response<List<TarefaDto>> response = new Response<>();
+		
 		List<Tarefa> tarefa = this.tarefaService.listarTarefasAtivasUsuario(matricula);
-		List<TarefaDto> cadastrarTarefaDtos = converterTarefaParaDto(tarefa);
+		List<TarefaDto> dto = converterTarefaParaDto(tarefa);
+		
+		response.setData(dto);
 
-		return new ResponseEntity<>(cadastrarTarefaDtos, HttpStatus.OK);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/{matricula}")
-	public ResponseEntity<List<TarefaDto>> listaTarefasPorMatricula(@PathVariable Long matricula)
+	public ResponseEntity<Response<List<TarefaDto>>> listaTarefasPorMatricula(@PathVariable Long matricula)
 			throws NotFoundException {
-
+		Response<List<TarefaDto>> response = new Response<>();
+		
 		List<Tarefa> tarefa = this.tarefaService.listarTarefasPorUsuarioMatricula(matricula);
-		List<TarefaDto> cadastrarTarefaDtos = converterTarefaParaDto(tarefa);
+		List<TarefaDto> dto = converterTarefaParaDto(tarefa);
+		
+		response.setData(dto);
 
-		return new ResponseEntity<List<TarefaDto>>(cadastrarTarefaDtos, HttpStatus.OK);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 
 	}
 
