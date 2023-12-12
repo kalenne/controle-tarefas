@@ -122,6 +122,7 @@ public class UsuarioController {
 		dto.setStatus(usuario.getStatus());
 		dto.setCpf(usuario.getCpf());
 		dto.setDataNascimento(fd.dbToUser(usuario.getDataNascimento()));
+		dto.setMatricula(usuario.getMatricula());
 		return dto;
 	}
 

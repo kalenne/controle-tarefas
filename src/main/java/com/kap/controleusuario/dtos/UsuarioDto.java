@@ -23,6 +23,8 @@ public class UsuarioDto {
 	private String cpf;
 	
 	private String dataNascimento;
+	
+	private Long matricula;
 
 	public Long getId() {
 		return id;
@@ -88,9 +90,12 @@ public class UsuarioDto {
 	public void setDataNascimento(String DataNascimento) {
 		this.dataNascimento = DataNascimento;
 	}
-	
-	
-	
-	
 
+	public Long getMatricula() {
+		return matricula;
+	}
+
+	public void setMatricula(Long matricula) {
+		this.matricula = matricula;
+	}
 }
