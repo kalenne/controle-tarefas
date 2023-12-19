@@ -112,7 +112,7 @@ public class TarefaController {
 			cadastrarTarefaDto.setStatus(dados.getStatus());
 			cadastrarTarefaDto.setDescricao(dados.getDescricao());
 			cadastrarTarefaDto.setNomeUsuario(dados.getUsuario().getNome());
-			cadastrarTarefaDto.setAutor(dados.getUsuario().getMatricula());
+			cadastrarTarefaDto.setAutor(dados.getAutor().getMatricula());
 			cadastrarTarefaDto.setDataInicio(fldt.dbToUser(dados.getDataInicio()));
 			cadastrarTarefaDto.setDataFinal(fldt.dbToUser(dados.getDataFinal()));
 			cadastrarTarefaDto.setPrioridade(dados.getPrioridade());

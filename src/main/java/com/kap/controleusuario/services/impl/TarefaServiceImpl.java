@@ -105,9 +105,4 @@ public class TarefaServiceImpl implements TarefaService {
 		
 		return Prioridade.values();
 	}
-	
-	
-	
-	
-
 }
