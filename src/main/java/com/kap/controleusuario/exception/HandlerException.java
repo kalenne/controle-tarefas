@@ -16,57 +16,64 @@ import com.kap.controleusuario.utils.FormatLocalDateTime;
 
 @ControllerAdvice
 public class HandlerException {
+	
+	private FormatLocalDateTime fldt;
 
 	@ExceptionHandler(NotFoundException.class)
 	public final ResponseEntity<ResponseException> handlerNotFound(NotFoundException nfe, WebRequest request) {
 
-		FormatLocalDateTime fldt = new FormatLocalDateTime(LocalDateTime.now());
-
-		ResponseException re = new ResponseException(fldt.formatDateTime(), nfe.getMessage(),
+		ResponseException re = new ResponseException(fldt.dbToUser(LocalDateTime.now()), nfe.getMessage(),
 				request.getDescription(false));
 
-		return new ResponseEntity<ResponseException>(re, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(re, HttpStatus.NOT_FOUND);
 
 	}
 
 	@ExceptionHandler(AlreadyExistsException.class)
 	public final ResponseEntity<ResponseException> handlerAlreadyExists(AlreadyExistsException aee,
 			WebRequest request) {
-		FormatLocalDateTime fldt = new FormatLocalDateTime(LocalDateTime.now());
-
-		ResponseException re = new ResponseException(fldt.formatDateTime(), aee.getMessage(),
+		
+		ResponseException re = new ResponseException(fldt.dbToUser(LocalDateTime.now()), aee.getMessage(),
 				request.getDescription(false));
 
-		return new ResponseEntity<ResponseException>(re, HttpStatus.CONFLICT);
+		return new ResponseEntity<>(re, HttpStatus.CONFLICT);
 
 	}
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public final ResponseEntity<ResponseException> handlerBadRequest(MethodArgumentNotValidException manv, WebRequest request) {
-
-		FormatLocalDateTime fldt = new FormatLocalDateTime(LocalDateTime.now());
 		
 		List<String> errors = manv.getBindingResult().getFieldErrors()
 	            .stream()
 	            .map(DefaultMessageSourceResolvable::getDefaultMessage)
 	            .collect(Collectors.toList());
 
-		ResponseException re = new ResponseException(fldt.formatDateTime(), errors.toString(),
+		ResponseException re = new ResponseException(fldt.dbToUser(LocalDateTime.now()), errors.toString(),
 				request.getDescription(false));
 
-		return new ResponseEntity<ResponseException>(re, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(re, HttpStatus.BAD_REQUEST);
 
 	}
 	
 	@ExceptionHandler(UnauthorizedException.class)
 	public final ResponseEntity<ResponseException> handlerUnauthorized(UnauthorizedException ue,
 			WebRequest request) {
-		FormatLocalDateTime fldt = new FormatLocalDateTime(LocalDateTime.now());
 
-		ResponseException re = new ResponseException(fldt.formatDateTime(), ue.getMessage(),
+		ResponseException re = new ResponseException(fldt.dbToUser(LocalDateTime.now()), ue.getMessage(),
 				request.getDescription(false));
 
-		return new ResponseEntity<ResponseException>(re, HttpStatus.UNAUTHORIZED);
+		return new ResponseEntity<>(re, HttpStatus.UNAUTHORIZED);
+
+	}
+	
+	@ExceptionHandler(BadRequestException.class)
+	public final ResponseEntity<ResponseException> handlerIllegalArgument(BadRequestException bre,
+			WebRequest request) {
+
+		ResponseException re = new ResponseException(fldt.dbToUser(LocalDateTime.now()), bre.getMessage(),
+				request.getDescription(false));
+
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(re);
 
 	}
 	

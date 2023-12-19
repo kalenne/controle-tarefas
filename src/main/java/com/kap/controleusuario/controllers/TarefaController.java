@@ -1,8 +1,12 @@
 package com.kap.controleusuario.controllers;
 
+import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +24,7 @@ import com.kap.controleusuario.entities.Tarefa;
 import com.kap.controleusuario.exception.NotFoundException;
 import com.kap.controleusuario.response.Response;
 import com.kap.controleusuario.services.TarefaService;
+import com.kap.controleusuario.utils.FormatLocalDateTime;
 import com.kap.controleusuario.validacao.ValidacaoUsuario;
 
 @RestController
@@ -32,9 +37,14 @@ public class TarefaController {
 	@Autowired
 	private ValidacaoUsuario validacao;
 	
+	@Autowired
+	private FormatLocalDateTime fldt;
+	
+	private static final Logger log = LoggerFactory.getLogger(TarefaController.class);
+	
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	@PostMapping
-	public ResponseEntity salvarTarefa(@RequestBody TarefaDto cadastrarTarefaDto) {
+	public ResponseEntity salvarTarefa(@RequestBody TarefaDto cadastrarTarefaDto) throws ParseException {
 
 		Tarefa tarefa = this.converterDtoparaTarefa(cadastrarTarefaDto);
 		this.tarefaService.salvarTarefa(tarefa);
@@ -72,7 +82,7 @@ public class TarefaController {
 
 	@PutMapping("/{codigo}")
 	public ResponseEntity<TarefaDto> editarTarefaPorCodigo(@PathVariable String codigo,
-			@RequestBody TarefaDto cadastrarTarefaDto) {
+			@RequestBody TarefaDto cadastrarTarefaDto) throws ParseException {
 
 		Tarefa tarefa = this.converterDtoparaTarefa(cadastrarTarefaDto);
 		this.tarefaService.editarTarefaPorCodigo(codigo, tarefa);
@@ -80,12 +90,16 @@ public class TarefaController {
 		return new ResponseEntity(HttpStatus.OK);
 	}
 
-	private Tarefa converterDtoparaTarefa(TarefaDto cadastrarTarefaDto) {
-
+	private Tarefa converterDtoparaTarefa(TarefaDto cadastrarTarefaDto) throws ParseException {
 		Tarefa tarefa = new Tarefa();
 		tarefa.setDescricao(cadastrarTarefaDto.getDescricao());
 		tarefa.setUsuario(this.validacao.usuarioPorMatricula(cadastrarTarefaDto.getMatricula()));
 		tarefa.setStatus(cadastrarTarefaDto.getStatus());
+		tarefa.setAutor(this.validacao.usuarioPorMatricula(cadastrarTarefaDto.getAutor()));
+		tarefa.setPrioridade(cadastrarTarefaDto.getPrioridade());
+		tarefa.setTitulo(cadastrarTarefaDto.getTitulo());
+		tarefa.setDataInicio(fldt.userToDb(cadastrarTarefaDto.getDataInicio()));
+		tarefa.setDataFinal(fldt.userToDb(cadastrarTarefaDto.getDataFinal()));
 		return tarefa;
 	}
 
@@ -98,6 +112,12 @@ public class TarefaController {
 			cadastrarTarefaDto.setStatus(dados.getStatus());
 			cadastrarTarefaDto.setDescricao(dados.getDescricao());
 			cadastrarTarefaDto.setNomeUsuario(dados.getUsuario().getNome());
+			cadastrarTarefaDto.setAutor(dados.getUsuario().getMatricula());
+			cadastrarTarefaDto.setDataInicio(fldt.dbToUser(dados.getDataInicio()));
+			cadastrarTarefaDto.setDataFinal(fldt.dbToUser(dados.getDataFinal()));
+			cadastrarTarefaDto.setPrioridade(dados.getPrioridade());
+			cadastrarTarefaDto.setTitulo(dados.getTitulo());
+			
 			return cadastrarTarefaDto;
 		}).collect(Collectors.toList());
 	}

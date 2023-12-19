@@ -26,7 +26,7 @@ import com.kap.controleusuario.enums.UserRoles;
 import com.kap.controleusuario.exception.NotFoundException;
 import com.kap.controleusuario.response.Response;
 import com.kap.controleusuario.services.UsuarioService;
-import com.kap.controleusuario.utils.FormatDate;
+import com.kap.controleusuario.utils.FormatLocalDate;
 
 @RestController
 @RequestMapping("/api/usuario")
@@ -37,7 +37,7 @@ public class UsuarioController {
 	@Autowired
 	private UsuarioService usuarioService;
 
-	private FormatDate fd = new FormatDate();
+	private FormatLocalDate fd = new FormatLocalDate();
 
 	@PostMapping("/salvar")
 	public ResponseEntity salvarUsuario(@Valid @RequestBody UsuarioDto cadastroUsuarioDto) {

@@ -14,11 +14,13 @@ import com.kap.controleusuario.utils.FormatLocalDateTime;
 @RestControllerAdvice
 public class JwtAuthenticationExceptionHandler extends ResponseEntityExceptionHandler {
 	
+	private FormatLocalDateTime fldt;
+	
 	@ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ResponseException> handleJwtAuthenticationException(AuthenticationException ex) {
-		FormatLocalDateTime fldt = new FormatLocalDateTime(LocalDateTime.now());
+	
 
-		ResponseException re = new ResponseException(fldt.formatDateTime(), ex.getMessage(),
+		ResponseException re = new ResponseException(fldt.dbToUser(LocalDateTime.now()), ex.getMessage(),
 				"Acesso Negado. Usuário não autenticado ou expirado.");
 
         return new ResponseEntity<>(re, HttpStatus.UNAUTHORIZED);

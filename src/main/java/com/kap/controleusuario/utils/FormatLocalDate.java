@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class FormatDate {
+public class FormatLocalDate {
 
 	DateTimeFormatter userformato = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
      

@@ -10,10 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kap.controleusuario.entities.Tarefa;
+import com.kap.controleusuario.enums.Prioridade;
 import com.kap.controleusuario.enums.TipoStatus;
 import com.kap.controleusuario.exception.NotFoundException;
 import com.kap.controleusuario.repositories.TarefaRepository;
 import com.kap.controleusuario.services.TarefaService;
+import com.kap.controleusuario.utils.FormatLocalDateTime;
 import com.kap.controleusuario.validacao.ValidacaoTarefa;
 import com.kap.controleusuario.validacao.ValidacaoUsuario;
 
@@ -27,13 +29,21 @@ public class TarefaServiceImpl implements TarefaService {
 
 	@Autowired
 	private ValidacaoTarefa validacao;
-
+	
 	public Tarefa salvarTarefa(Tarefa tarefa) {
-
-		tarefa.setCodigo(validacao.gerarCodigoTarefa());
-		tarefa.setStatus(TipoStatus.CRIADO);
-
-		return this.tarefaRepository.save(tarefa);
+		
+		if(validacao.validarDataInicioFinal(tarefa.getDataInicio(), tarefa.getDataFinal())) {
+			tarefa.setCodigo(validacao.gerarCodigoTarefa());
+			tarefa.setStatus(TipoStatus.CRIADO);
+			
+			String titulo = tarefa.getCodigo() + " - " + tarefa.getTitulo();
+			tarefa.setTitulo(titulo);
+			
+			return this.tarefaRepository.save(tarefa);
+		}
+		
+		return null;
+		
 	}
 
 	@Override
@@ -55,7 +65,11 @@ public class TarefaServiceImpl implements TarefaService {
 			dados.setDescricao(tarefa.getDescricao());
 			dados.setStatus(tarefa.getStatus());
 			dados.setUsuario(tarefa.getUsuario());
-
+			dados.setDataInicio(tarefa.getDataInicio());
+			dados.setDataInicio(tarefa.getDataFinal());
+			String titulo = dados.getCodigo() + " - " + tarefa.getTitulo();
+			dados.setTitulo(titulo);
+			dados.setPrioridade(tarefa.getPrioridade());
 			return this.tarefaRepository.save(dados);
 		});
 
@@ -85,6 +99,14 @@ public class TarefaServiceImpl implements TarefaService {
 	public TipoStatus[] status() {
 		return TipoStatus.values();
 	}
+
+	@Override
+	public Prioridade[] prioridade() {
+		
+		return Prioridade.values();
+	}
+	
+	
 	
 	
 
