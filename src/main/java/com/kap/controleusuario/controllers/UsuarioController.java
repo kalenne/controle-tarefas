@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kap.controleusuario.dtos.UsuarioDto;
 import com.kap.controleusuario.entities.Usuario;
+import com.kap.controleusuario.enums.TipoStatus.UsuarioStatus;
 import com.kap.controleusuario.enums.UserRoles;
 import com.kap.controleusuario.exception.NotFoundException;
 import com.kap.controleusuario.response.Response;
@@ -79,7 +80,7 @@ public class UsuarioController {
 
 		return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
 	}
-
+		
 	@PutMapping("/editar")
 	public ResponseEntity editarUsuarioPorEmail(@Valid @RequestBody UsuarioDto cadastroUsuarioDto) {
 
@@ -98,6 +99,7 @@ public class UsuarioController {
 
 		return new ResponseEntity(HttpStatus.OK);
 	}
+	
 
 	private Usuario converterDtoparaUsuario(UsuarioDto cadastroUsuarioDto) {
 		Usuario usuario = new Usuario();
@@ -123,6 +125,7 @@ public class UsuarioController {
 		dto.setCpf(usuario.getCpf());
 		dto.setDataNascimento(fd.dbToUser(usuario.getDataNascimento()));
 		dto.setMatricula(usuario.getMatricula());
+		dto.setRoles(usuario.getRoles());
 		return dto;
 	}
 

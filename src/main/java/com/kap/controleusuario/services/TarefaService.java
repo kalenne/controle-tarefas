@@ -17,9 +17,5 @@ public interface TarefaService {
 	Optional<Tarefa> editarTarefaPorCodigo(String codigo, Tarefa tarefa) throws NotFoundException;
 	
 	List<Tarefa> listarTarefasAtivasUsuario(Long matricula) throws NotFoundException;
-	
-	TipoStatus[] status();
-	
-	Prioridade[] prioridade();
-	
+		
 }

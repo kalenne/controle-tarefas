@@ -88,12 +88,6 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 		return user;
 	}
-
-
-	@Override
-	public UsuarioStatus[] status() {
-		return UsuarioStatus.values();
-	}
 	
 	private Usuario setUsuarioEditado(Usuario usuario, Usuario UsuarioEditado) {
 		usuario.setNome(UsuarioEditado.getNome());

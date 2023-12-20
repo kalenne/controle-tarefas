@@ -17,7 +17,5 @@ public interface UsuarioService {
 	Optional<Usuario> editarUsuarioPorEmail(Usuario usuario) throws NotFoundException;
 	
 	Optional<Usuario> editarUsuarioPorMatricula(Long matricula, Usuario usuario) throws NotFoundException;
-		
-	UsuarioStatus[] status();
-	
+			
 }

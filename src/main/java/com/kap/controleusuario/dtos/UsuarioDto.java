@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CPF;
 
 import com.kap.controleusuario.enums.TipoStatus.UsuarioStatus;
+import com.kap.controleusuario.enums.UserRoles;
 
 public class UsuarioDto {
 
@@ -25,6 +26,8 @@ public class UsuarioDto {
 	private String dataNascimento;
 	
 	private Long matricula;
+	
+	private UserRoles roles;
 
 	public Long getId() {
 		return id;
@@ -55,7 +58,6 @@ public class UsuarioDto {
 		this.email = email;
 	}
 
-	@NotEmpty(message = "Senha nao pode ser vazio.")
 	public String getSenha() {
 		return senha;
 	}
@@ -98,4 +100,14 @@ public class UsuarioDto {
 	public void setMatricula(Long matricula) {
 		this.matricula = matricula;
 	}
+
+	public UserRoles getRoles() {
+		return roles;
+	}
+
+	public void setRoles(UserRoles roles) {
+		this.roles = roles;
+	}
+	
+	
 }

@@ -21,6 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kap.controleusuario.dtos.TarefaDto;
 import com.kap.controleusuario.entities.Tarefa;
+import com.kap.controleusuario.enums.Prioridade;
+import com.kap.controleusuario.enums.TipoStatus;
+import com.kap.controleusuario.enums.TipoStatus.UsuarioStatus;
 import com.kap.controleusuario.exception.NotFoundException;
 import com.kap.controleusuario.response.Response;
 import com.kap.controleusuario.services.TarefaService;

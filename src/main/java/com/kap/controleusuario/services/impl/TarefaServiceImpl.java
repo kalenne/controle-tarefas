@@ -95,14 +95,4 @@ public class TarefaServiceImpl implements TarefaService {
 		return tarefa;
 	}
 
-	@Override
-	public TipoStatus[] status() {
-		return TipoStatus.values();
-	}
-
-	@Override
-	public Prioridade[] prioridade() {
-		
-		return Prioridade.values();
-	}
 }
