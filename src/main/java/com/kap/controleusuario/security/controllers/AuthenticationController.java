@@ -97,13 +97,18 @@ public class AuthenticationController {
 	}
 	
 	@GetMapping("/{token}")
-	public ResponseEntity<Response<String>> retornaUsernameAutenticado(@PathVariable String token) {
+	public ResponseEntity<Response<String[]>> retornaUsernameAutenticado(@PathVariable String token) {
+		String[] userDetailsArray = new String[2];
 		
 		String username = jwtTokenUtil.getUsernameFromToken(token);
+		String authority = jwtTokenUtil.getAuthority(token);
 		
-		Response<String> response = new Response<>();
+		userDetailsArray[0] = username;
+		userDetailsArray[1] = authority;
 		
-		response.setData(username);
+		Response<String[]> response = new Response<>();
+		
+		response.setData(userDetailsArray);
 		
 		return ResponseEntity.ok(response);
 		

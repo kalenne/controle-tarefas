@@ -36,6 +36,17 @@ public class JwtTokenUtil {
 		return username;
 	}
 	
+	public String getAuthority(String token) {
+		String role;
+		try {
+			Claims claims = getClaimsFromToken(token);
+			role = (String) claims.get("role");
+		} catch (Exception e) {
+			role = null;
+		}
+		return role;
+	}
+	
 	public Date getExpirationDateFromToken(String token) {
 		Date expiracao;
 		try {
