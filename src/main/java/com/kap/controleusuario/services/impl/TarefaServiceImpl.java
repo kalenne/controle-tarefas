@@ -34,11 +34,7 @@ public class TarefaServiceImpl implements TarefaService {
 		
 		if(validacao.validarDataInicioFinal(tarefa.getDataInicio(), tarefa.getDataFinal())) {
 			tarefa.setCodigo(validacao.gerarCodigoTarefa());
-			tarefa.setStatus(TipoStatus.CRIADO);
-			
-			String titulo = tarefa.getCodigo() + " - " + tarefa.getTitulo();
-			tarefa.setTitulo(titulo);
-			
+			tarefa.setStatus(TipoStatus.CRIADO);			
 			return this.tarefaRepository.save(tarefa);
 		}
 		
@@ -67,8 +63,7 @@ public class TarefaServiceImpl implements TarefaService {
 			dados.setUsuario(tarefa.getUsuario());
 			dados.setDataInicio(tarefa.getDataInicio());
 			dados.setDataInicio(tarefa.getDataFinal());
-			String titulo = dados.getCodigo() + " - " + tarefa.getTitulo();
-			dados.setTitulo(titulo);
+			dados.setTitulo(tarefa.getTitulo());
 			dados.setPrioridade(tarefa.getPrioridade());
 			return this.tarefaRepository.save(dados);
 		});

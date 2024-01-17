@@ -42,7 +42,7 @@ public class JwtTokenUtil {
 			Claims claims = getClaimsFromToken(token);
 			role = (String) claims.get("role");
 		} catch (Exception e) {
-			role = null;
+			return null;
 		}
 		return role;
 	}
