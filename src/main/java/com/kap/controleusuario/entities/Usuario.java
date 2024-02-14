@@ -14,8 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
-import com.kap.controleusuario.enums.TipoStatus.UsuarioStatus;
-import com.kap.controleusuario.enums.UserRoles;
+import com.kap.controleusuario.enums.UsuarioPerfil;
+import com.kap.controleusuario.enums.UsuarioStatus;
 
 @Entity (name="usuario")
 public class Usuario implements Serializable {
@@ -30,7 +30,7 @@ public class Usuario implements Serializable {
 	
 	private String senha;
 	
-	private UserRoles roles;
+	private UsuarioPerfil roles;
 	
 	private String nome;
 	
@@ -82,11 +82,11 @@ public class Usuario implements Serializable {
 	}
 	@Enumerated(EnumType.STRING)
 	@Column(name="roles", nullable = false)
-	public UserRoles getRoles() {
+	public UsuarioPerfil getRoles() {
 		return roles;
 	}
 
-	public void setRoles(UserRoles roles) {
+	public void setRoles(UsuarioPerfil roles) {
 		this.roles = roles;
 	}
 	

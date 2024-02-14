@@ -1,13 +1,15 @@
 package com.kap.controleusuario.dtos;
 
+import java.time.LocalDate;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CPF;
 
-import com.kap.controleusuario.enums.TipoStatus.UsuarioStatus;
-import com.kap.controleusuario.enums.UserRoles;
+import com.kap.controleusuario.enums.UsuarioPerfil;
+import com.kap.controleusuario.enums.UsuarioStatus;
 
 public class UsuarioDto {
 
@@ -19,15 +21,15 @@ public class UsuarioDto {
 
 	private String senha;
 
-	private UsuarioStatus status;
+	private String status;
 	
 	private String cpf;
 	
-	private String dataNascimento;
+	private LocalDate dataNascimento;
 	
 	private Long matricula;
 	
-	private UserRoles roles;
+	private String roles;
 
 	public Long getId() {
 		return id;
@@ -66,11 +68,11 @@ public class UsuarioDto {
 		this.senha = senha;
 	}
 	
-	public UsuarioStatus getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(UsuarioStatus status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
@@ -84,12 +86,11 @@ public class UsuarioDto {
 		this.cpf = cpf;
 	}
 	
-	@NotEmpty(message = "Data de nascimento não pode ser vazia.")
-	public String getDataNascimento() {
+	public LocalDate getDataNascimento() {
 		return dataNascimento;
 	}
 
-	public void setDataNascimento(String DataNascimento) {
+	public void setDataNascimento(LocalDate DataNascimento) {
 		this.dataNascimento = DataNascimento;
 	}
 
@@ -101,11 +102,11 @@ public class UsuarioDto {
 		this.matricula = matricula;
 	}
 
-	public UserRoles getRoles() {
+	public String getRoles() {
 		return roles;
 	}
 
-	public void setRoles(UserRoles roles) {
+	public void setRoles(String roles) {
 		this.roles = roles;
 	}
 	

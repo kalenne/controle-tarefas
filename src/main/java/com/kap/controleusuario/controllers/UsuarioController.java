@@ -1,7 +1,8 @@
 package com.kap.controleusuario.controllers;
 
-import java.text.ParseException;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,11 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kap.controleusuario.dtos.UsuarioDto;
 import com.kap.controleusuario.entities.Usuario;
-import com.kap.controleusuario.enums.TipoStatus.UsuarioStatus;
-import com.kap.controleusuario.enums.UserRoles;
 import com.kap.controleusuario.exception.NotFoundException;
 import com.kap.controleusuario.response.Response;
 import com.kap.controleusuario.services.UsuarioService;
+import com.kap.controleusuario.utils.ConverterEnum;
 import com.kap.controleusuario.utils.FormatLocalDate;
 
 @RestController
@@ -37,6 +36,9 @@ public class UsuarioController {
 
 	@Autowired
 	private UsuarioService usuarioService;
+	
+	@Autowired
+	private ConverterEnum converter;
 
 	private FormatLocalDate fd = new FormatLocalDate();
 
@@ -59,10 +61,25 @@ public class UsuarioController {
 		if (usuario.isPresent()) {
 			dto = converterUsuarioParaDto(usuario.get());
 		}
-		
+
 		response.setData(dto);
 
 		return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+	}
+
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+	@GetMapping("/admin/usuarios")
+	public ResponseEntity<Response<List<UsuarioDto>>> listarUsuarios() throws NotFoundException {
+
+		Response<List<UsuarioDto>> response = new Response<>();
+
+		List<Usuario> usuarios = this.usuarioService.buscarTodosUsuarios();
+		List<UsuarioDto> dto = converterUsuariosParaDto(usuarios);
+		
+		response.setData(dto);
+		
+		return new ResponseEntity<>(response, HttpStatus.OK);
+
 	}
 
 	@GetMapping("/e/{email}")
@@ -70,17 +87,17 @@ public class UsuarioController {
 			throws NotFoundException {
 		Response<UsuarioDto> response = new Response<>();
 		UsuarioDto dto = new UsuarioDto();
-		
+
 		Optional<Usuario> usuario = this.usuarioService.buscarPorEmail(email);
 		if (usuario.isPresent()) {
 			dto = converterUsuarioParaDto(usuario.get());
 		}
-		
+
 		response.setData(dto);
 
 		return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
 	}
-		
+
 	@PutMapping("/editar")
 	public ResponseEntity editarUsuarioPorEmail(@Valid @RequestBody UsuarioDto cadastroUsuarioDto) {
 
@@ -99,21 +116,17 @@ public class UsuarioController {
 
 		return new ResponseEntity(HttpStatus.OK);
 	}
-	
 
 	private Usuario converterDtoparaUsuario(UsuarioDto cadastroUsuarioDto) {
 		Usuario usuario = new Usuario();
 
-		try {
-			usuario.setNome(cadastroUsuarioDto.getNome());
-			usuario.setEmail(cadastroUsuarioDto.getEmail());
-			usuario.setSenha(cadastroUsuarioDto.getSenha());
-			usuario.setStatus(cadastroUsuarioDto.getStatus());
-			usuario.setCpf(cadastroUsuarioDto.getCpf());
-			usuario.setDataNascimento(fd.userToDb(cadastroUsuarioDto.getDataNascimento()));
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+		usuario.setNome(cadastroUsuarioDto.getNome());
+		usuario.setEmail(cadastroUsuarioDto.getEmail());
+		usuario.setSenha(cadastroUsuarioDto.getSenha());
+		usuario.setStatus(converter.converterStringUsuarioStatus(cadastroUsuarioDto.getStatus()));
+		usuario.setCpf(cadastroUsuarioDto.getCpf());
+		usuario.setDataNascimento(cadastroUsuarioDto.getDataNascimento());
+		usuario.setRoles(converter.converterStringUsuarioPerfil(cadastroUsuarioDto.getRoles()));
 		return usuario;
 	}
 
@@ -121,12 +134,30 @@ public class UsuarioController {
 		UsuarioDto dto = new UsuarioDto();
 		dto.setEmail(usuario.getEmail());
 		dto.setNome(usuario.getNome());
-		dto.setStatus(usuario.getStatus());
+		dto.setStatus(usuario.getStatus().toString());
 		dto.setCpf(usuario.getCpf());
-		dto.setDataNascimento(fd.dbToUser(usuario.getDataNascimento()));
+		dto.setDataNascimento(usuario.getDataNascimento());
 		dto.setMatricula(usuario.getMatricula());
-		dto.setRoles(usuario.getRoles());
+		dto.setRoles(usuario.getRoles().toString());
 		return dto;
+	}
+
+	private List<UsuarioDto> converterUsuariosParaDto(List<Usuario> usuarios) {
+
+		return usuarios.stream().map(usuario -> {
+
+			UsuarioDto dto = new UsuarioDto();
+			dto.setEmail(usuario.getEmail());
+			dto.setNome(usuario.getNome());
+			dto.setStatus(usuario.getStatus().toString());
+			dto.setCpf(usuario.getCpf());
+			dto.setDataNascimento(usuario.getDataNascimento());
+			dto.setMatricula(usuario.getMatricula());
+			dto.setRoles(usuario.getRoles().toString());
+			return dto;
+
+		}).collect(Collectors.toList());
+
 	}
 
 }

@@ -7,7 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import com.kap.controleusuario.entities.Usuario;
-import com.kap.controleusuario.enums.UserRoles;
+import com.kap.controleusuario.enums.UsuarioPerfil;
 
 public class JwtUserFactory {
 	
@@ -23,10 +23,10 @@ public class JwtUserFactory {
 				
 	}
 	
-	private static List<GrantedAuthority> mapToGrantedAuthorities (UserRoles roles){
+	private static List<GrantedAuthority> mapToGrantedAuthorities (UsuarioPerfil roles){
 		List<GrantedAuthority> authorities = new ArrayList<>();
 		
-		authorities.add(new SimpleGrantedAuthority(roles.toString()));
+		authorities.add(new SimpleGrantedAuthority(roles.name()));
 		return authorities;
 
 

@@ -2,11 +2,20 @@ package com.kap.controleusuario.enums;
 
 public enum TipoStatus {
 	
-	CRIADO, EM_ANDAMENTO, FINALIZADO, CANCELADO;
+	CRIADO("Criado"), EM_ANDAMENTO("Em Andamento"), FINALIZADO("Finalizado"), CANCELADO("Cancelado"), VENCIDO("Vencido");
 	
-	public enum UsuarioStatus {
-		ATIVO, INATIVO
+	
+	
+	private final String texto;
+
+	TipoStatus(String texto) {
+		this.texto = texto;
 	}
+	
+	@Override
+    public String toString() {
+        return texto;
+    }
 }
 
 

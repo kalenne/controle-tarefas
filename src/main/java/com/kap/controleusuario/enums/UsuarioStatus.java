@@ -1,15 +1,11 @@
 package com.kap.controleusuario.enums;
 
-public enum Prioridade {
-	
-	BAIXO("Baixo"),
-	MEDIO("Médio"),
-	ALTO("Alto"),
-	CRITICO("Crítico");
+public enum UsuarioStatus {
+	ATIVO("Ativo"), INATIVO("Inativo");
 	
 	private final String texto;
 
-	Prioridade(String texto) {
+	UsuarioStatus (String texto) {
 		this.texto = texto;
 	}
 	
@@ -17,5 +13,4 @@ public enum Prioridade {
     public String toString() {
         return texto;
     }
-
 }

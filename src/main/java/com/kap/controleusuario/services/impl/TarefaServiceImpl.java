@@ -45,13 +45,13 @@ public class TarefaServiceImpl implements TarefaService {
 	@Override
 	public List<Tarefa> listarTarefasPorUsuarioMatricula(Long matricula) throws NotFoundException {
 
-		List<Tarefa> tarefa = this.tarefaRepository.findByUsuarioId(validacao.usuarioPorMatricula(matricula));
+		List<Tarefa> tarefas = this.tarefaRepository.findByUsuarioId(validacao.usuarioPorMatricula(matricula));
 
-		if (tarefa == null) {
+		if (tarefas == null) {
 			throw new NotFoundException("Não possui tarefa atrelada ao Usuario");
 		}
-
-		return tarefa;
+	
+		return tarefas;
 	}
 
 	@Override

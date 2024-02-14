@@ -1,13 +1,14 @@
 	package com.kap.controleusuario.services.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kap.controleusuario.entities.Usuario;
-import com.kap.controleusuario.enums.UserRoles;
-import com.kap.controleusuario.enums.TipoStatus.UsuarioStatus;
+import com.kap.controleusuario.enums.UsuarioPerfil;
+import com.kap.controleusuario.enums.UsuarioStatus;
 import com.kap.controleusuario.exception.NotFoundException;
 import com.kap.controleusuario.repositories.UsuarioRepository;
 import com.kap.controleusuario.security.utils.SenhaUtils;
@@ -46,6 +47,12 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 		return Optional.ofNullable(usuario.get());
 	}
+	
+	@Override
+	public List<Usuario> buscarTodosUsuarios() throws NotFoundException {
+		List<Usuario> usuario = this.usuarioRepository.findAll();
+		return usuario;
+	}
 
 	@Override
 	public Usuario salvarUsuario(Usuario usuario) {
@@ -53,7 +60,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 		usuario.setMatricula(validacao.gerarMatriculaUsuarioValidacao());
 		usuario.setEmail(validacao.usuarioValidaEmail(usuario.getEmail()));
 		usuario.setStatus(UsuarioStatus.ATIVO);
-		usuario.setRoles(UserRoles.ROLE_USER);
+		usuario.setRoles(UsuarioPerfil.ROLE_USER);
 		usuario.setCpf(validacao.usuarioValidaCpf(usuario.getCpf()));
 		usuario.setSenha(SenhaUtils.gerarBCrypt(usuario.getSenha()));
 		return this.usuarioRepository.save(usuario);
@@ -105,5 +112,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 		usuario.setCpf(UsuarioEditado.getCpf());
 		return usuario;
 	}
+
+	
 
 }

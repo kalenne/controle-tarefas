@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import com.kap.controleusuario.enums.UsuarioPerfil;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -38,13 +40,15 @@ public class JwtTokenUtil {
 	
 	public String getAuthority(String token) {
 		String role;
+		UsuarioPerfil urRoles;
 		try {
 			Claims claims = getClaimsFromToken(token);
 			role = (String) claims.get("role");
+			urRoles = UsuarioPerfil.valueOf(role);
 		} catch (Exception e) {
 			return null;
 		}
-		return role;
+		return urRoles.toString();
 	}
 	
 	public Date getExpirationDateFromToken(String token) {

@@ -1,5 +1,7 @@
 package com.kap.controleusuario.dtos;
 
+import java.time.LocalDateTime;
+
 import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.validator.constraints.Length;
@@ -14,11 +16,11 @@ public class TarefaDto {
 	private Long matricula;
 	private String nomeUsuario;
 	private String titulo;
-	private TipoStatus status;
+	private String status;
 	private String codigo;
-	private String dataInicio;
-	private String dataFinal;
-	private Prioridade prioridade;
+	private LocalDateTime dataInicio;
+	private LocalDateTime dataFinal;
+	private String prioridade;
 	private Long autor;
 	
 	public Long getId() {
@@ -49,11 +51,11 @@ public class TarefaDto {
 	}
 
 	@NotEmpty(message = "Status não pode ser vazio")
-	public TipoStatus getStatus() {
-		return status;
+	public String getStatus() {
+		return status.toString();
 	}
 
-	public void setStatus(TipoStatus status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
@@ -85,29 +87,29 @@ public class TarefaDto {
 	}
 	
 	@NotEmpty(message = "Data de Inicio não pode ser vazio")
-	public String getDataInicio() {
+	public LocalDateTime getDataInicio() {
 		return dataInicio;
 	}
 
-	public void setDataInicio(String dataInicio) {
+	public void setDataInicio(LocalDateTime dataInicio) {
 		this.dataInicio = dataInicio;
 	}
 	
 	@NotEmpty(message = "Data Final não pode ser vazio")
-	public String getDataFinal() {
+	public LocalDateTime getDataFinal() {
 		return dataFinal;
 	}
 
-	public void setDataFinal(String dataFinal) {
+	public void setDataFinal(LocalDateTime dataFinal) {
 		this.dataFinal = dataFinal;
 	}
 	
 	@NotEmpty(message = "Prioridades não pode ser vazio")
-	public Prioridade getPrioridade() {
+	public String getPrioridade() {
 		return prioridade;
 	}
 
-	public void setPrioridade(Prioridade prioridade) {
+	public void setPrioridade(String prioridade) {
 		this.prioridade = prioridade;
 	}
 	

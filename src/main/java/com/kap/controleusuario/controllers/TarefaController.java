@@ -1,7 +1,6 @@
 package com.kap.controleusuario.controllers;
 
 import java.text.ParseException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,12 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kap.controleusuario.dtos.TarefaDto;
 import com.kap.controleusuario.entities.Tarefa;
-import com.kap.controleusuario.enums.Prioridade;
 import com.kap.controleusuario.enums.TipoStatus;
-import com.kap.controleusuario.enums.TipoStatus.UsuarioStatus;
 import com.kap.controleusuario.exception.NotFoundException;
 import com.kap.controleusuario.response.Response;
 import com.kap.controleusuario.services.TarefaService;
+import com.kap.controleusuario.utils.ConverterEnum;
 import com.kap.controleusuario.utils.FormatLocalDateTime;
 import com.kap.controleusuario.validacao.ValidacaoUsuario;
 
@@ -39,6 +37,9 @@ public class TarefaController {
 
 	@Autowired
 	private ValidacaoUsuario validacao;
+	
+	@Autowired
+	private ConverterEnum converter;
 	
 	@Autowired
 	private FormatLocalDateTime fldt;
@@ -97,12 +98,12 @@ public class TarefaController {
 		Tarefa tarefa = new Tarefa();
 		tarefa.setDescricao(cadastrarTarefaDto.getDescricao());
 		tarefa.setUsuario(this.validacao.usuarioPorMatricula(cadastrarTarefaDto.getMatricula()));
-		tarefa.setStatus(cadastrarTarefaDto.getStatus());
+		tarefa.setStatus(converter.converterStringTipoStatus(cadastrarTarefaDto.getStatus()));
 		tarefa.setAutor(this.validacao.usuarioPorMatricula(cadastrarTarefaDto.getAutor()));
-		tarefa.setPrioridade(cadastrarTarefaDto.getPrioridade());
+		tarefa.setPrioridade(converter.converterStringPrioridade(cadastrarTarefaDto.getPrioridade()));
 		tarefa.setTitulo(cadastrarTarefaDto.getTitulo());
-		tarefa.setDataInicio(fldt.userToDb(cadastrarTarefaDto.getDataInicio()));
-		tarefa.setDataFinal(fldt.userToDb(cadastrarTarefaDto.getDataFinal()));
+		tarefa.setDataInicio(cadastrarTarefaDto.getDataInicio());
+		tarefa.setDataFinal(cadastrarTarefaDto.getDataFinal());
 		return tarefa;
 	}
 
@@ -112,13 +113,13 @@ public class TarefaController {
 			TarefaDto cadastrarTarefaDto = new TarefaDto();
 			cadastrarTarefaDto.setCodigo(dados.getCodigo());
 			cadastrarTarefaDto.setMatricula(dados.getUsuario().getMatricula());
-			cadastrarTarefaDto.setStatus(dados.getStatus());
+			cadastrarTarefaDto.setStatus(dados.getStatus().toString());
 			cadastrarTarefaDto.setDescricao(dados.getDescricao());
 			cadastrarTarefaDto.setNomeUsuario(dados.getUsuario().getNome());
 			cadastrarTarefaDto.setAutor(dados.getAutor().getMatricula());
-			cadastrarTarefaDto.setDataInicio(fldt.dbToUser(dados.getDataInicio()));
-			cadastrarTarefaDto.setDataFinal(fldt.dbToUser(dados.getDataFinal()));
-			cadastrarTarefaDto.setPrioridade(dados.getPrioridade());
+			cadastrarTarefaDto.setDataInicio(dados.getDataInicio());
+			cadastrarTarefaDto.setDataFinal(dados.getDataFinal());
+			cadastrarTarefaDto.setPrioridade(dados.getPrioridade().toString());
 			cadastrarTarefaDto.setTitulo(dados.getTitulo());
 			
 			return cadastrarTarefaDto;
